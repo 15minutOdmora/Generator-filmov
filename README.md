@@ -1,6 +1,7 @@
 # PB1 Naključni generator filmov
 
-#### Avtorja: Liam Mislej in Luka Šešet
+#### Avtorja: 
+Liam Mislej in Luka Šešet
 
 #### Ideja: 
 
@@ -13,7 +14,7 @@ Stran bi kasneje, odvisno od napredka, lahko še nadgradili:
 - Dodali bi lahko algoritem, ki priporoča filme glede na všečkane filme. 
 
 
-#### Izvršitev 
+#### Izvršitev:
 
 - Podatke bi pridobili iz spletne strani https://www.imdb.com/interfaces/ ter jih pretvorili v podatkovno bazo, po potrebi preuredili.
 - Baza bi bila narejena z uporabo MySql.
@@ -22,7 +23,7 @@ Stran bi kasneje, odvisno od napredka, lahko še nadgradili:
 - V kolikor bi bilo potrebno spletno stran deliti izven localhost-a, bi zato uporabili Amazonovo storitev AWS Elastic Beanstalk ali pa PythonAnywhere, za bazo podatkov pa AWS EC2. (Vse so brezplačne)
 
 
-#### Zaključek
+#### Zaključek:
 
 Ideja vsekakor ni orientirana na sestavi spletne strani, ta bo kar se da minimalna, ter le medij za prikaz podatkov in sprejem parametrov/vnosov uporabnika. 
 Ker imamo nekaj izkušenj z uporabo Flask-a, bi nam sam izgled ter postavitev strani vzel le nekaj ur. Delo bo bolj osredotočeno na pravilne poizvedbe iz podatkovne baze.
