@@ -4,7 +4,7 @@
 
 #### Ideja: 
 
-Iz znane spletne strani IMDb bi pobrali podatke o vseh filmih katere jih spletna stran ponuja. Ustrvarili bi minimalno spletno stran z uporabo Pythona,
+Iz znane spletne strani IMDb bi pobrali podatke o vseh filmih katere jih spletna stran ponuja. Ustvarili bi minimalno spletno stran z uporabo Pythona,
 kjer bi se lahko uporabnik registriral(že registrirani pa prijavili), poiskal filme ter njihove podatke, ali pa določene igralce. Uporabnik bo lahko iskal po žanrih, 
 padajoče/naraščajoče glede na oceno, po zasedbi filma... Dodali bi tudi možnost, da se uporabniku generira naključni filem, to bi bila tudi glavna "atrakcija" strani, kjer bi prikazan filem lahko bil zgolj naključen ali pa bi izpolnjeval pogoje katere jih uporabnik zastavi (npr. od katirega leta dalje je lahko filem, največja dolžina filma, žanr, najnižja ocena, ...). Registrirani uporabniki bi imeli dodatno funkcionalnost, da si lahko označijo že ogledane filme ter jim jih naključni generator filmov nebi več predlagal. 
 
