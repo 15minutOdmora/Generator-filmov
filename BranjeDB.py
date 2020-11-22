@@ -1,0 +1,1 @@
+# Class za branje iz databasea 
