@@ -57,6 +57,7 @@ def login():
         return render_template("login.html")
 
 
+# User registration
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == "POST":
@@ -65,10 +66,24 @@ def register():
         password = request.form["password"]
         repeat_password = request.form["repeat-password"]
 
-        # Check if passwords match
+        # Check if passwords match, if not flash error
         if password != repeat_password:
-            flash("The passwords don't match.")
+            flash("The passwords didn't match.")
             return render_template("register.html")
+
+        # Check if email or phone number
+        if "@" in email_phone:
+            email = email_phone
+        # Should be phone number
+        else:
+            # Check if phone number => only digits
+            if email_phone.replace(" ", "").isdigit():
+               phone = email_phone
+            else:
+                flash("Email or phone number is incorrect")
+                return render_template("register.html")
+
+        # If everything passes, todo encrypt password, save to database
     else:
         return render_template("register.html")
 
