@@ -1,7 +1,11 @@
 from flask import Flask, redirect, url_for, render_template, request, flash, session
 
-import mysql.connector
 from passlib.hash import sha256_crypt
+from functools import wraps
+
+from dbCommunication import Connector, UserDataBase
+# Create instances
+udb = UserDataBase()
 
 import os
 
@@ -15,46 +19,45 @@ app.secret_key = os.urandom(24)
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-
-        if request.form["not_registered"]:
-            return redirect(url_for('register'))
+        # Nedela
+        """if request.form["not_registered"]:
+            return redirect(url_for('register'))"""
 
         # Get the input of username and password
         username = request.form['username']
         password_candidate = request.form['password']
-        password = ''  # Shitty solution to the login system, works for now
-        print(username, password_candidate)
-        # Create cursor
-        # cur = db.cursor(dictionary=True)
 
-        # Get user by username todo usposobi to z databaseom
-        """ver = False  # verificator if username exists
-        cur.execute("SELECT * FROM users WHERE username = '{}'".format(username))
-        for x in cur:
-            password = x['password']
-            ver = True
+        # Check if user in database, get user_dict
+        ver, user_dict = udb.get_user_by_username(username)
+        print(user_dict)
 
-        if ver:
-            # Compare passwords
-            if sha256_crypt.verify(password_candidate, password):
-                # app.logger.info("Password matched")
-                session['logged_in'] = True
-                session['username'] = username
-
-                # Close connection and redirect
-                cur.close()
-                return redirect(url_for('dashboard'))
-
+        # Check if username exists
+        if ver is True:
+            # Check if password matches
+            if password_candidate == user_dict["password"]:
+                # todo, log the user in
+                pass
             else:
-                flash("Incorrect password")
+                flash("Incorrect password.")
                 return render_template("login.html")
-
         else:
-            flash("Username does not exist")
-            return render_template("login.html")"""
+            flash("Username does not exist.")
+            return render_template("login.html")
 
     else:
         return render_template("login.html")
+
+
+# Check if user is logged in
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Log in to access profile.')
+            return redirect(url_for('login'))
+    return wrap
 
 
 # User registration
@@ -68,24 +71,38 @@ def register():
 
         # Check if passwords match, if not flash error
         if password != repeat_password:
-            flash("The passwords didn't match.")
+            flash("The passwords do not match.")
             return render_template("register.html")
 
         # Check if email or phone number
         if "@" in email_phone:
             email = email_phone
+            phone = None
         # Should be phone number
         else:
-            # Check if phone number => only digits
+            # Check if phone number has only digits
             if email_phone.replace(" ", "").isdigit():
-               phone = email_phone
+                phone = email_phone
+                email = None
             else:
                 flash("Email or phone number is incorrect")
                 return render_template("register.html")
 
-        # If everything passes, todo encrypt password, save to database
+        # If everything passes, save user to db
+        udb.add_new_user(username, password, email=email, phone=phone)
+
+        # Set logged in session to true, create user dict.
+        session['logged_in'] = True
+        session['user'] = {'username': username, 'email': email, 'phone': phone}
+
     else:
         return render_template("register.html")
+
+
+@app.route("/", methods=["POST", "GET"])
+@is_logged_in
+def main_page():
+    return render_template("<h1>Hello, this is a test.</h1>")
 
 
 if __name__ == "__main__":

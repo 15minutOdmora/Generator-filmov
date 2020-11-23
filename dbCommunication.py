@@ -7,7 +7,7 @@ class Connector:
             host="generator-filmov-1.cay847edpwb1.us-east-2.rds.amazonaws.com",
             user="admin",
             passwd="predmetpb1jezakon",
-            database="generator-filmov",
+            database="mydb",
             )
         self.cur = None
 
@@ -63,11 +63,11 @@ class UserDataBase(Connector):
 
         # Check if phone or email was given
         if phone is None and email is not None:
-            code = "INSERT INTO Uporabnik(uorabniskoIme, geslo, email) VALUES (%s, %s, %s)"
+            code = "INSERT INTO User(username, password, email) VALUES (%s, %s, %s)"
             param = (username, password, email)
 
         elif email is None and phone is not None:
-            code = "INSERT INTO Uporabnik(uorabniskoIme, geslo, tel) VALUES (%s, %s, %s)"
+            code = "INSERT INTO User(username, password, phone) VALUES (%s, %s, %s)"
             param = (username, password, phone)
 
         # Execute the code
@@ -88,7 +88,8 @@ class UserDataBase(Connector):
         # Create cursor
         self.create_cursor()
 
-        code = "DELETE FROM Uporabnik WHERE idUporabnik = %s"
+        # Delete user by id
+        code = "DELETE FROM User WHERE idUser = %s"
         param = (id,)
         self.cur.execute(code, param)
 
@@ -98,7 +99,32 @@ class UserDataBase(Connector):
         # Close cursor
         self.close_cursor()
 
+    def get_user_by_username(self, username):
+        """
+        Function checks if user exists, returns True and the users data in a dict.
+        :return: Touple (True/False if user exists, {'userId': ,'username': ,'password': ,'email': ,'phone': })
+        """
+        # Create cursor
+        self.create_cursor()
+
+        # Search in database
+        code = "SELECT * FROM User WHERE username = '%s'"
+        param = (username,)
+        self.cur.execute(code, param)
+        # Should only be one username in database
+        for user in self.cur:
+            id_user = user['idUser']
+            password = user['password']
+            email = user['email']
+            phone = user['phone']
+
+        self.close_cursor()
+
+        return True, {'idUser': id_user, 'username': username, 'password': password, 'email': email, 'phone': phone}
+
 
 if __name__=="__main__":
     # For testing
+    udb = UserDataBase()
+    udb.add_new_user("test", "test", "test@gmail.com", phone=None)
     pass

@@ -50,12 +50,13 @@
             <button type="submit" value="submit" class="btn btn-primary btn-block" name="login">Log in</button>
         </div>
         <div class="form-group">
-            <button type="button" value="submit" class="btn btn-primary btn-block" name="not_registered">Register</button>
+            <button type="button" value="not_registered" class="btn btn-primary btn-block" name="register">Register</button>
         </div>
     </form>
     {% for message in get_flashed_messages() %}
-      <div class="alert-error">Error: {{ message }}</div>
+      <div class="alert-error">{{ message }}</div>
     {% endfor %}
+
 </div>
 </body>
 </html>
