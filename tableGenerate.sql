@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`Star`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Star` (
-  `idZvezdnik` INT NOT NULL AUTO_INCREMENT,
+  `idUser` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(45) NOT NULL,
   `birthYear` YEAR NOT NULL,
   `deathYear` YEAR NULL,
