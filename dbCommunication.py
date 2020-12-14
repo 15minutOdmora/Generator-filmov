@@ -1,14 +1,10 @@
 import mysql.connector
+from auth import AUTH
 
 
 class Connector:
     def __init__(self):
-        self.db = mysql.connector.connect(
-            host="generator-filmov-1.cay847edpwb1.us-east-2.rds.amazonaws.com",
-            user="admin",
-            passwd="predmetpb1jezakon",
-            database="mydb",
-            )
+        self.db = mysql.connector.connect(**AUTH)
         self.cur = None
 
     def create_cursor(self):
