@@ -26,7 +26,7 @@ Stran bi kasneje, odvisno od napredka, lahko še nadgradili:
 Ideja vsekakor ni orientirana na sestavi spletne strani, ta bo kar se da minimalna; bo le medij za prikaz podatkov in sprejem parametrov/vnosov uporabnika. Ker imamo nekaj izkušenj z uporabo Flask-a, bi nam sam izgled ter postavitev strani vzel le nekaj ur. Delo bo bolj osredotočeno na pravilne poizvedbe iz podatkovne baze.
 
 ### ER model:
-![slika1](slike/ERModel.png)
+![slika1](slike/ERmodel.png)
 
 
 
