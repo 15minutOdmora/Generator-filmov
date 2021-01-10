@@ -119,6 +119,20 @@ class UserDataBase(Connector):
         return True, {'idUser': id_user, 'username': username, 'password': password, 'email': email, 'phone': phone}
 
 
+class MovieDatabase(Connector):
+
+    def search_by_keyword(self, keyword):
+        """ todo Create whole function
+        Function gets a keyword, returns all the resoults
+        Search by keyword on main page(could be actor, movie, genre...)
+        type = movie, actor, ...
+        :param keyword: string
+        :return: dict("movie": dict("movieId": dict("title": , ...)), "actor": dict(""))
+        """
+        pass
+
+
+
 if __name__=="__main__":
     # For testing
     udb = UserDataBase()
