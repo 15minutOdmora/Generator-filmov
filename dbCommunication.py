@@ -122,17 +122,71 @@ class UserDataBase(Connector):
 class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
-        """ todo Create whole function
+        """
         Function gets a keyword that was typed in the search box, returns all the results.
         Search by keyword on main page(could be actor, movie, genre...)
         :param keyword: string
         :return: int(number_of_matches), dict("movies": sorted(list[dict("movieId": , "title": , "year": , ...)]),
                                               "actor": sorted(list[dict("actorId": , "age": , ...))])
         List should be sorted decreasing by number of votes for movies, decreasing by number of roles for actor
-        (num. of roles = num. of movies played in)
-        number_of_matches is an integer number of all results found (movies + actors)
         """
-        pass
+        # we only have directors / writers
+        # Finished, check returns and comments
+
+        
+        # Lists for saving data
+        movies_data = []
+        writers_and_directors_data = []
+        # Add % for keyword search
+        keyword += '%'
+        # Create cursor for movies
+        self.create_cursor()
+
+        # Search in movie database
+        code = "SELECT * FROM MOVIE WHERE title LIKE %s ORDER BY (numVotes) DESC"
+        param = (keyword,)
+        self.cur.execute(code, param)
+
+        # Save all of the data for movies
+        for movie in self.cur:
+            idMovie = movie['idMovie']
+            title = movie['title']
+            isAdult = movie['isAdult']
+            releaseYear = movie['releaseYear']
+            runtimeMinutes = movie['runtimeMinutes']
+            rating = movie['rating']
+            numVotes = movie['numVotes']
+            
+            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes}
+            movies_data.append(movies_dict)
+            
+        self.close_cursor()
+
+        # Create cursor for actors
+        self.create_cursor()
+
+        # Search in writers and directors database
+        code = "SELECT writersanddirectors.* FROM writersanddirectors JOIN team ON writersanddirectors.idWritersAndDirectors = team.idWritersAndDirectors WHERE writersanddirectors.name LIKE '%s' GROUP BY(writersanddirectors.name) ORDER BY(count(team.idWritersAndDirectors)) DESC"
+        param = (keyword,)
+        self.cur.execute(code, param)
+        
+        # Save all of the data for actors
+        for writer_or_director in self.cur:
+            idWritersAndDirectors = writer_or_director['idWritersAndDirectors']
+            name = writer_or_director['name']
+            birthYear = writer_or_director['birthYear']
+            deathYear = writer_or_director['deathYear']
+
+            writers_or_directors_dict = {'idWritersAndDirectors': idWritersAndDirectors, 'name': name, 'birthYear': birthYear, 'deathYear': deathYear}
+            writers_and_directors_data.append(writers_or_directors_dict)
+
+        self.close_cursor()
+
+        # Saves number of matches
+        number_of_matches = len(movies_data) + len(writers_and_directors_data)
+
+        return number_of_matches, {'movies':movies_data,'actors':writers_and_directors_data}
+
 
     def random_new_movies(self):
         """ todo Create whole function
