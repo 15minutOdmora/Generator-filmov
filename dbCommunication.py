@@ -143,7 +143,7 @@ class MovieDatabase(Connector):
         self.create_cursor()
 
         # Search in movie database
-        code = "SELECT * FROM MOVIE WHERE title LIKE %s ORDER BY (numVotes) DESC"
+        code = "SELECT * FROM movie WHERE title LIKE %s ORDER BY (numVotes) DESC"
         param = (keyword,)
         self.cur.execute(code, param)
 
