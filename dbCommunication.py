@@ -189,14 +189,34 @@ class MovieDatabase(Connector):
 
 
     def random_new_movies(self):
-        """ todo Create whole function
+        """ todo Create order dict by numVotes
         Function returns a dict containing a sorted list of 20 random new-er movies.
         :return: dict("movies": sorted(list["movieId": , ...]))
         Newer movies have a higher chance of being selected, so the random returned dict should be mostly movies
-        made between 2010 - 2020, with a small chance of older movies.
+        made between 2010 - 2020, with a small chance of older movies. //
         Sorted by number of votes.
         """
-        pass
+        # List to save the movie data in
+        movies_data = []
+        # Create cursor
+        self.create_cursor()
+        code = "SELECT title FROM movie ORDER BY RAND() LIMIT 20"
+        self.cur.execute(code)
+
+        # Save all of the data for movies
+        for movie in self.cur:
+            idMovie = movie['idMovie']
+            title = movie['title']
+            isAdult = movie['isAdult']
+            releaseYear = movie['releaseYear']
+            runtimeMinutes = movie['runtimeMinutes']
+            rating = movie['rating']
+            numVotes = movie['numVotes']
+            
+            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes}
+            movies_data.append(movies_dict)
+
+        self.close_cursor()
 
 
 if __name__=="__main__":
