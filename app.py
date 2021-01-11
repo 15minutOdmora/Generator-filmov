@@ -100,9 +100,13 @@ def register():
 
 
 @app.route("/", methods=["POST", "GET"])
-# @is_logged_in
 def main_page():
     return render_template("main_page.html")
+
+
+@app.route("/random_generator", methods=["POST", "GET"])
+def random_generator():
+    return render_template("random_generator.html")
 
 
 if __name__ == "__main__":

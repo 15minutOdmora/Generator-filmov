@@ -123,14 +123,26 @@ class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
         """ todo Create whole function
-        Function gets a keyword, returns all the resoults
+        Function gets a keyword that was typed in the search box, returns all the results.
         Search by keyword on main page(could be actor, movie, genre...)
-        type = movie, actor, ...
         :param keyword: string
-        :return: dict("movie": dict("movieId": dict("title": , ...)), "actor": dict(""))
+        :return: int(number_of_matches), dict("movies": sorted(list[dict("movieId": , "title": , "year": , ...)]),
+                                              "actor": sorted(list[dict("actorId": , "age": , ...))])
+        List should be sorted decreasing by number of votes for movies, decreasing by number of roles for actor
+        (num. of roles = num. of movies played in)
+        number_of_matches is an integer number of all results found (movies + actors)
         """
         pass
 
+    def random_new_movies(self):
+        """ todo Create whole function
+        Function returns a dict containing a sorted list of 20 random new-er movies.
+        :return: dict("movies": sorted(list["movieId": , ...]))
+        Newer movies have a higher chance of being selected, so the random returned dict should be mostly movies
+        made between 2010 - 2020, with a small chance of older movies.
+        Sorted by number of votes.
+        """
+        pass
 
 
 if __name__=="__main__":
