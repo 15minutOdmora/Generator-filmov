@@ -47,16 +47,10 @@ def title_crew():
     else:
       directors = row[1].split(',')
       writers = row[2].split(',')
-      dict_crew[row[0]] = {keys[1]:directors,keys[2]:writers}
-      for x in directors:
-        if x not in potrebni_id:
-          potrebni_id.append(x)      
-      for x in writers:
-        if x not in potrebni_id:
-          potrebni_id.append(x)
+      dict_crew[row[0]] = {keys[1]:directors,keys[2]:writers}      
     i += 1
     
-  return [potrebni_id,dict_crew]
+  return dict_crew
 
 def title_ratings():
   print('im in ratings')
@@ -72,7 +66,7 @@ def title_ratings():
     i += 1
   return dict_ratings
 
-def name_basics(ID_ZVEZDNIKI):
+def name_basics():
   print('name_basics')
   tsv_file = open("name.basics.end.tsv",encoding = "utf8")
   read_tsv = csv.reader(tsv_file, delimiter="\t")
@@ -81,8 +75,7 @@ def name_basics(ID_ZVEZDNIKI):
     if i == 0:
       keys = [row[1],row[2],row[3]]
       dict_id_name_basics = {}
-    
-    if i != 0 and row[0] in ID_ZVEZDNIKI:
+    elif i != 0:
       dict_name_basics = {keys[0]: row[1],keys[1]:row[2] ,keys[2]: row[3]}
       dict_id_name_basics[row[0]] = dict_name_basics
     i+= 1
@@ -93,7 +86,7 @@ def name_basics(ID_ZVEZDNIKI):
 genres_data = movies_basics()[0]
 movies_data = movies_basics()[1]
 #print(ID_MOVIE)
-ID_writersAndDirectors = title_crew()[0]
+
 #print(ID_ZVEZDNIKI)
 
 
@@ -110,7 +103,6 @@ def final_table_movies(title_ratings_data,movies_data,genres_data):
   final_table_movies_genres = {}
   for x in title_ratings_data:
     keys_genres = []
-    print(movies_data[x])
     final_data_movies[x] = {'originalTitle': movies_data[x]['originalTitle'], 'isAdult': movies_data[x]['isAdult'], 'startYear': movies_data[x]['startYear'], 'runtimeMinutes': movies_data[x]['runtimeMinutes'], 'averageRating': title_ratings_data[x]['averageRating'],'numVotes': title_ratings_data[x]['numVotes'] }
     for key in genres_data:
       if genres_data[key] in movies_data[x]['genres']:
@@ -127,8 +119,8 @@ print('Podatki')
 movies = tab_tmp[0]
 genresByMovie = tab_tmp[1]
 genres = genres_data
-writersAndDirectors = name_basics(ID_writersAndDirectors)
-team = title_crew()[1]
+writersAndDirectors = name_basics()
+team = title_crew()
 
 print('Movies tabela: \n', movies)
 print('GenresByMovie tabela: \n',genresByMovie)
@@ -147,7 +139,6 @@ import mysql.connector
 ##cursor.execute("insert into genres (genreName,..) VALUES (%s,%s)",(podatek1,podatek2))
 ##cursor.execute("insert into genres (genreName,..) VALUES (%s)",(,podatek1))
 
-#1. to zalaufas
 def beri_movies(movies):
   tb = mysql.connector.connect(user = 'root', password = 'Azamat444', host = '127.0.0.1', database = 'mydb')
   for movieid in movies:
@@ -161,18 +152,19 @@ def beri_movies(movies):
     cursor.execute("insert into Movie (idMovie,title,isAdult,releaseYear,runtimeMinutes,rating,numVotes) VALUES (%s,%s,%s,%s,%s,%s,%s)",(movieid,originalTitle,isAdult,startYear,runtimeMinutes,averageRating,numVotes))
     cursor.close()
   tb.commit()
-# 3. to zalaufas
+
 def beri_genresByMovie(genresByMovie):
   print('Im in genresbymovie')
   tb = mysql.connector.connect(user = 'root', password = 'Azamat444', host = '127.0.0.1', database = 'mydb')
   for movieid in genresByMovie:
     for genreid in genresByMovie[movieid]:
+      print(genreid,movieid)
       cursor = tb.cursor(dictionary = True)
       cursor.execute("insert into GenresByMovie (idGenre,idMovie) VALUES (%s,%s)",(genreid,movieid))
       cursor.close()
   tb.commit()      
       
-#2. to zalaufas
+
 def beri_genres(genres):
   print('Im in genres')
   tb = mysql.connector.connect(user = 'root', password = 'Azamat444', host = '127.0.0.1', database = 'mydb')
@@ -184,7 +176,7 @@ def beri_genres(genres):
     cursor.close()
   tb.commit()
 
-#4. to zalaufas 
+
 def beri_writersAndDirectors(writersAndDirectors):
   print('Im in writers')
   tb = mysql.connector.connect(user = 'root', password = 'Azamat444', host = '127.0.0.1', database = 'mydb')
@@ -197,8 +189,7 @@ def beri_writersAndDirectors(writersAndDirectors):
     cursor.execute("insert into writersAndDirectors (idWritersAndDirectors,name,birthYear,deathYear) VALUES (%s,%s,%s,%s)",(writersAndDirectorsID,name,birthYear,deathYear))
     cursor.close()
   tb.commit()
-
-# 5. to zalaufas    
+    
 def beri_team(team):
   tb = mysql.connector.connect(user = 'root', password = 'Azamat444', host = '127.0.0.1', database = 'mydb')
   for movieID in team:
