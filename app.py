@@ -1,13 +1,11 @@
 from flask import Flask, redirect, url_for, render_template, request, flash, session
-
+import os
 from passlib.hash import sha256_crypt
 from functools import wraps
 
 from dbCommunication import Connector, UserDataBase
 # Create instances
 udb = UserDataBase()
-
-import os
 
 
 # Flask initial setup
@@ -18,25 +16,35 @@ app.secret_key = os.urandom(24)
 # User login
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    # todo Access user liked, watched jsons and save to session user
     if request.method == "POST":
-        # Nedela
-        """if request.form["not_registered"]:
-            return redirect(url_for('register'))"""
+        # If register button was clicked, redirect
+        if request.form.get("submit_button", False) == "not_registered":
+            return redirect(url_for('register'))
 
         # Get the input of username and password
         username = request.form['username']
+        if username == '':
+            flash("No username given.")
+            return render_template("login.html")
         password_candidate = request.form['password']
+        if password_candidate == '':
+            flash("No password given.")
+            return render_template("login.html")
 
         # Check if user in database, get user_dict
-        ver, user_dict = udb.get_user_by_username(username)
-        print(user_dict)
+        is_in_database, user_dict = udb.get_user_by_username(username)
 
         # Check if username exists
-        if ver is True:
-            # Check if password matches
-            if password_candidate == user_dict["password"]:
-                # todo, log the user in
-                pass
+        if is_in_database:
+            # Check if password matches the saved hashed password
+            if sha256_crypt.verify(password_candidate, user_dict["password"]):
+                session['logged_in'] = True
+                email = user_dict['email']
+                phone = user_dict['phone']
+                session['user'] = {'username': username, 'email': email, 'phone': phone}
+                # Rederect to main page
+                return redirect(url_for('main_page'))
             else:
                 flash("Incorrect password.")
                 return render_template("login.html")
@@ -46,6 +54,13 @@ def login():
 
     else:
         return render_template("login.html")
+
+
+@app.route("/log_out", methods=["POST", "GET"])
+def log_out():
+    session.pop('logged_in')
+    session.pop('user')
+    return redirect(url_for('main_page'))
 
 
 # Check if user is logged in
@@ -63,6 +78,8 @@ def is_logged_in(f):
 # User registration
 @app.route("/register", methods=["POST", "GET"])
 def register():
+    # todo Access user liked, watched json data and save to session user
+    # todo Writing an email already written returns MySql error
     if request.method == "POST":
         email_phone = request.form["email-phone"]
         username = request.form["username"]
@@ -88,12 +105,17 @@ def register():
                 flash("Email or phone number is incorrect")
                 return render_template("register.html")
 
-        # If everything passes, save user to db
-        udb.add_new_user(username, password, email=email, phone=phone)
+        # If everything passes, encrypt password in hash
+        hashed_pass = sha256_crypt.hash(password)
+        # Save user to db
+        udb.add_new_user(username, hashed_pass, email=email, phone=phone)
 
         # Set logged in session to true, create user dict.
         session['logged_in'] = True
         session['user'] = {'username': username, 'email': email, 'phone': phone}
+
+        # Rederect to main page
+        return redirect(url_for('main_page'))
 
     else:
         return render_template("register.html")

@@ -38,7 +38,7 @@
 </head>
 <body>
 <div class="login-form">
-    <form action="" method="post">
+    <form action="" novalidate method="post">
         <h2 class="text-center">Log in</h2>
         <div class="form-group">
             <input name="username" type="text" class="form-control" placeholder="Username" required="required">
@@ -47,10 +47,10 @@
             <input name="password" type="password" class="form-control" placeholder="Password" required="required">
         </div>
         <div class="form-group">
-            <button type="submit" value="submit" class="btn btn-primary btn-block" name="login">Log in</button>
+            <button type="submit" value="submit" class="btn btn-primary btn-block" name="submit_button">Log in</button>
         </div>
         <div class="form-group">
-            <button type="button" value="not_registered" class="btn btn-primary btn-block" name="register">Register</button>
+            <button type="submit" value="not_registered" class="btn btn-primary btn-block" name="submit_button">Register</button>
         </div>
     </form>
     {% for message in get_flashed_messages() %}

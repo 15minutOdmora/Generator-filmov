@@ -104,7 +104,7 @@ class UserDataBase(Connector):
         self.create_cursor()
 
         # Search in database
-        code = "SELECT * FROM User WHERE username = '%s'"
+        code = "SELECT * FROM user WHERE username = %s"
         param = (username,)
         self.cur.execute(code, param)
         # Should only be one username in database
@@ -112,7 +112,7 @@ class UserDataBase(Connector):
             id_user = user['idUser']
             password = user['password']
             email = user['email']
-            phone = user['phone']
+            phone = user['phoneNumber']
 
         self.close_cursor()
 
