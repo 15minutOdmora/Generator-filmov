@@ -4,7 +4,7 @@ import csv
 
 
 def movies_basics():
-  tsv_file = open("title.basics.tsv",encoding = 'utf8')
+  tsv_file = open("DataFilteringFinal/title.basics.tsv", encoding ='utf8')
   read_tsv = csv.reader(tsv_file, delimiter="\t")
   genres = {}
   count = 1

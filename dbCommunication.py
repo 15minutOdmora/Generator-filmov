@@ -217,7 +217,7 @@ class MovieDatabase(Connector):
             movies_data.append(movies_dict)
 
         self.close_cursor()
-        return dict("movies":movies_data)
+        return {"movies": movies_data}
 
 
 if __name__=="__main__":
