@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`WritersAndDirectors` (
   `birthYear` INT NULL,
   `deathYear` INT NULL,
   PRIMARY KEY (`idWritersAndDirectors`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+  INDEX `Name` (`name` ASC))
 ENGINE = InnoDB;
 
 
