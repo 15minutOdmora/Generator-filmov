@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`User` (
   `password` VARCHAR(80) NOT NULL,
   `email` VARCHAR(50) NULL,
   `phoneNumber` VARCHAR(50) NULL,
+  `liked` JSON NULL,
+  `watched` JSON NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `phoneNumber_UNIQUE` (`phoneNumber` ASC))
@@ -55,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Movie` (
   `rating` FLOAT NULL,
   `numVotes` INT NULL,
   PRIMARY KEY (`idMovie`),
-  UNIQUE INDEX `Title_UNIQUE` (`title` ASC))
+  INDEX `Title` (`title` ASC))
 ENGINE = InnoDB;
 
 
