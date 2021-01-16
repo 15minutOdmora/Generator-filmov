@@ -119,6 +119,13 @@ class UserDataBase(Connector):
 
         return True, {'idUser': id_user, 'username': username, 'password': password, 'email': email, 'phone': phone}
 
+    def get_user_by_id(self, id):
+        """ TODO
+        Function checks if user exists, returns True and the users data in a dict.
+        :return: Touple (True/False if user exists, {'userId': ,'username': ,'email': ,'phone': , 'liked': JSON, 'watched' JSON})
+        """
+        pass
+
 
 class MovieDatabase(Connector):
 
@@ -172,7 +179,6 @@ class MovieDatabase(Connector):
         number_of_matches = len(movies_data)
 
         return number_of_matches, movies_data
-
 
     def random_new_movies(self):
         """ todo Create order dict by numVotes

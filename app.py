@@ -128,6 +128,13 @@ def movie(id):
     return render_template("movie_page.html", movie=movie_data)
 
 
+@app.route("/users/<username>", methods=["POST", "GET"])
+def user_profile(username):
+    # Todo make search by id
+    user_data = udb.get_user_by_username(username)
+    return render_template("user_profile.html", user_data=user_data)
+
+
 @app.route("/", methods=["POST", "GET"])
 def main_page():
     # todo v main_page.html ne dela isAdult
