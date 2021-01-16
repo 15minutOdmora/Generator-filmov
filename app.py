@@ -1,11 +1,12 @@
-from flask import Flask, redirect, url_for, render_template, request, flash, session
+from flask import Flask, redirect, url_for, render_template, request, flash, session, jsonify
 import os
 from passlib.hash import sha256_crypt
 from functools import wraps
 
-from dbCommunication import Connector, UserDataBase
-# Create instances
+from dbCommunication import Connector, UserDataBase, MovieDatabase
+# Create instances UserDatabase and MovieDatatbase
 udb = UserDataBase()
+mdb = MovieDatabase()
 
 
 # Flask initial setup
@@ -121,14 +122,40 @@ def register():
         return render_template("register.html")
 
 
+@app.route("/movie/<id>", methods=["POST", "GET"])
+def movie(id):
+    movie_data = mdb.search_movie_by_id(id)[0]
+    return render_template("movie_page.html", movie=movie_data)
+
+
 @app.route("/", methods=["POST", "GET"])
 def main_page():
-    return render_template("main_page.html")
+    # todo v main_page.html ne dela isAdult
+    if request.method == "POST":
+        # Get search_button pressed
+        if request.form.get("search_button", False) == 'submit':
+            # Get text from search box
+            search_text = request.form["search"]
+            # Check if not empty string
+            if search_text == '':
+                pass
+                # return render_template("main_page.html")
+            else:
+                # Get movies from db
+                search_resoults, movie_data = mdb.search_by_keyword(search_text)
+                movies = movie_data
+                return render_template("main_page.html", movies=movies, search_resoults=search_resoults)
+
+    movie_data = mdb.random_new_movies()
+    movies = movie_data['movies']
+
+    return render_template("main_page.html", movies=movies, search_resoults=-1)
 
 
 @app.route("/random_generator", methods=["POST", "GET"])
 def random_generator():
     return render_template("random_generator.html")
+
 
 
 if __name__ == "__main__":

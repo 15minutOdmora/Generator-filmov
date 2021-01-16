@@ -1,4 +1,5 @@
 import mysql.connector
+from image_scraping import *
 from auth import AUTH
 
 
@@ -122,7 +123,7 @@ class UserDataBase(Connector):
 class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
-        """
+        """ todo popravi opis funkcije
         Function gets a keyword that was typed in the search box, returns all the results.
         Search by keyword on main page(could be actor, movie, genre...)
         :param keyword: string
@@ -133,7 +134,6 @@ class MovieDatabase(Connector):
         # we only have directors / writers
         # Finished, check returns and comments
 
-        
         # Lists for saving data
         movies_data = []
         writers_and_directors_data = []
@@ -156,41 +156,27 @@ class MovieDatabase(Connector):
             runtimeMinutes = movie['runtimeMinutes']
             rating = movie['rating']
             numVotes = movie['numVotes']
-            
-            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes}
+
+            movies_dict = {'idMovie': idMovie,
+                           'title': title,
+                           'isAdult': isAdult,
+                           'releaseYear': releaseYear,
+                           'runtimeMinutes': runtimeMinutes,
+                           'rating': rating,
+                           'numVotes': numVotes}
             movies_data.append(movies_dict)
             
         self.close_cursor()
 
-        # Create cursor for actors
-        self.create_cursor()
-
-        # Search in writers and directors database
-        code = "SELECT writersanddirectors.* FROM writersanddirectors JOIN team ON writersanddirectors.idWritersAndDirectors = team.idWritersAndDirectors WHERE writersanddirectors.name LIKE '%s' GROUP BY(writersanddirectors.name) ORDER BY(count(team.idWritersAndDirectors)) DESC"
-        param = (keyword,)
-        self.cur.execute(code, param)
-        
-        # Save all of the data for actors
-        for writer_or_director in self.cur:
-            idWritersAndDirectors = writer_or_director['idWritersAndDirectors']
-            name = writer_or_director['name']
-            birthYear = writer_or_director['birthYear']
-            deathYear = writer_or_director['deathYear']
-
-            writers_or_directors_dict = {'idWritersAndDirectors': idWritersAndDirectors, 'name': name, 'birthYear': birthYear, 'deathYear': deathYear}
-            writers_and_directors_data.append(writers_or_directors_dict)
-
-        self.close_cursor()
-
         # Saves number of matches
-        number_of_matches = len(movies_data) + len(writers_and_directors_data)
+        number_of_matches = len(movies_data)
 
-        return number_of_matches, {'movies':movies_data,'actors':writers_and_directors_data}
+        return number_of_matches, movies_data
 
 
     def random_new_movies(self):
         """ todo Create order dict by numVotes
-        Function returns a dict containing a sorted list of 20 random new-er movies.
+        Function returns a dict containing a sorted list of 10 random new-er movies.
         :return: dict("movies": sorted(list["movieId": , ...]))
         Newer movies have a higher chance of being selected, so the random returned dict should be mostly movies
         made between 2010 - 2020, with a small chance of older movies. //
@@ -200,7 +186,7 @@ class MovieDatabase(Connector):
         movies_data = []
         # Create cursor
         self.create_cursor()
-        code = "SELECT title FROM movie ORDER BY RAND() LIMIT 20"
+        code = "SELECT * FROM movie ORDER BY RAND() LIMIT 5"
         self.cur.execute(code)
 
         # Save all of the data for movies
@@ -212,16 +198,57 @@ class MovieDatabase(Connector):
             runtimeMinutes = movie['runtimeMinutes']
             rating = movie['rating']
             numVotes = movie['numVotes']
-            
-            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes}
+
+            img_url = get_google_image_link(title + " " + str(releaseYear))
+            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes, 'img_url': img_url}
             movies_data.append(movies_dict)
 
         self.close_cursor()
         return {"movies": movies_data}
 
+    def search_movie_by_id(self, id):
+        """
+        Function: Returns a movies list containing movie dicts. of the id
+        :param id: idMovie
+        :return: list[dict("movies": list["movieId": , ...])]
+        """
+        # List to save the movie data in
+        movies_data = []
+        # Create cursor
+        self.create_cursor()
+        code = "SELECT * FROM movie WHERE idMovie = %s"
+        param = (id,)
+        self.cur.execute(code, param)
 
-if __name__=="__main__":
+        # Save all of the data for movies
+        for movie in self.cur:
+            idMovie = movie['idMovie']
+            title = movie['title']
+            isAdult = movie['isAdult']
+            releaseYear = movie['releaseYear']
+            runtimeMinutes = movie['runtimeMinutes']
+            rating = movie['rating']
+            numVotes = movie['numVotes']
+
+            img_url = get_google_image_link(title + " " + str(releaseYear))
+            additional_data = get_movie_details(id)
+
+            movies_dict = {'idMovie': idMovie,
+                           'title': title,
+                           'isAdult': isAdult,
+                           'releaseYear': releaseYear,
+                           'runtimeMinutes': runtimeMinutes,
+                           'rating': rating,
+                           'numVotes': numVotes,
+                           'img_url': img_url,
+                           'description': additional_data['description']}
+            movies_data.append(movies_dict)
+
+        return movies_data
+
+
+if __name__ == "__main__":
     # For testing
-    udb = UserDataBase()
-    udb.add_new_user("test", "test", "test@gmail.com", phone=None)
+    mdb = MovieDatabase()
+    print(mdb.random_new_movies())
     pass
