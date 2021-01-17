@@ -133,14 +133,26 @@ def register():
 def movie(id):
     # todo update jsons in database
     if request.method == "POST":
-        if request.form["like_button"].split(" ")[0] == "liked":
-            # Add to session liked todo update json in database
+        if request.form["save_button"].split(" ")[0] == "liked":
+            # Add to session liked
             session['user']['liked'][id] = "Test"
-            print(session['user']['liked'])
-        elif request.form["like_button"].split(" ")[0] == "unliked":
+            ver = udb.save_liked_to_user(session['user']['username'], session['user']['liked'])
+        elif request.form["save_button"].split(" ")[0] == "unliked":
             if id in session['user']['liked'].keys():
                 del session['user']['liked'][id]
-                print(session['user']['liked'])
+                ver = udb.save_liked_to_user(session['user']['username'], session['user']['liked'])
+                print(ver)
+
+        if request.form["save_button"].split(" ")[0] == "watched":
+            # Add to session liked
+            session['user']['watched'][id] = "Test"
+            ver = udb.save_watched_to_user(session['user']['username'], session['user']['watched'])
+            print(ver)
+        elif request.form["save_button"].split(" ")[0] == "unwatched":
+            if id in session['user']['watched'].keys():
+                del session['user']['watched'][id]
+                ver = udb.save_watched_to_user(session['user']['username'], session['user']['watched'])
+                print(ver)
 
     movie_data = mdb.search_movie_by_id(id)[0]
     return render_template("movie_page.html", movie=movie_data)
@@ -148,19 +160,23 @@ def movie(id):
 
 @app.route("/users/<username>", methods=["POST", "GET"])
 def user_profile(username):
-    # Todo make search by id
     is_in_database, user_data = udb.get_user_by_username(username)
-    return render_template("user_profile.html", user_data=user_data)
+    if is_in_database:
+        # Get liked and watched movies data
+        liked_movies = []
+        for key, value in user_data['liked'].items():
+            liked_movies.append(mdb.search_movie_by_id(key)[0])
+        watched_movies = []
+        for key, value in user_data['watched'].items():
+            watched_movies.append(mdb.search_movie_by_id(key)[0])
+        return render_template("user_profile.html", user_data=user_data, liked=liked_movies, watched=watched_movies)
+    else:
+        return render_template("<h2>This user does not exist</h2>")
 
 
 @app.route("/", methods=["POST", "GET"])
 def main_page():
-    # todo v main_page.html ne dela isAdult
     if request.method == "POST":
-        """if request.form.get('like_button').split(' ')[0] == 'liked':
-            print("Liked")
-        elif request.form.get('like_button').split(' ')[0] == 'unliked':
-            print("unliked")"""
         # Get search_button pressed
         if request.form.get("search_button", False) == 'submit':
             # Get text from search box
@@ -168,13 +184,11 @@ def main_page():
             # Check if not empty string
             if search_text == '':
                 pass
-                # return render_template("main_page.html")
             else:
                 # Get movies from db
                 search_resoults, movie_data = mdb.search_by_keyword(search_text)
                 movies = movie_data
                 return render_template("main_page.html", movies=movies, search_resoults=search_resoults)
-
 
     movie_data = mdb.random_new_movies()
     movies = movie_data['movies']
@@ -185,7 +199,6 @@ def main_page():
 @app.route("/random_generator", methods=["POST", "GET"])
 def random_generator():
     return render_template("random_generator.html")
-
 
 
 if __name__ == "__main__":
