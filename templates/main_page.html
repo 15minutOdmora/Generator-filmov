@@ -67,12 +67,18 @@
                      {% if session.logged_in %}
                          <div class="row float-right">
                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                 <label class="btn btn-outline-primary active">
-                                    <input type="checkbox" checked autocomplete="off"> Like
-                                 </label>
-                                 <label class="btn btn-outline-primary active">
-                                    <input type="checkbox" checked autocomplete="off"> Watched
-                                 </label>
+                                 <div class="input-group">
+                                     {% if movie.idMovie in session.user.liked.keys() %}
+                                        <label class="btn btn-danger disabled">Liked</label>
+                                     {% else %}
+                                        <label class="btn btn-outline-danger disabled">Liked</label>
+                                     {% endif %}
+                                     {% if movie.idMovie in session.user.watched.keys() %}
+                                        <label class="btn btn-success disabled">Watched</label>
+                                     {% else %}
+                                        <label class="btn btn-outline-success disabled">Watched</label>
+                                     {% endif %}
+                                 </div>
                              </div>
                          </div>
                      {% endif %}

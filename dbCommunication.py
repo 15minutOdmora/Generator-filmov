@@ -151,7 +151,13 @@ class UserDataBase(Connector):
         :param idUser: the id of the user
         :return: True/False if successful
         """
-        pass
+        # Create cursor
+        self.create_cursor()
+
+        # Search in database
+        code = "UPDATE user SET liked = %s, watched = %s WHERE idUser = %s"
+        param = (liked, watched, idUser)
+        self.cur.execute(code, param)
 
 
 class MovieDatabase(Connector):

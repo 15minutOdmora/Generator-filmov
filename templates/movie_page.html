@@ -34,7 +34,22 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                        {% if session.logged_in %}
+                        <div class="input-group">
+                            {% if movie.idMovie in session.user.liked.keys() %}
+                                <button type="submit" name="like_button" value="unliked {{ movie.idMovie }}" class="btn btn-outline-danger active">Liked</button>
+                            {% else %}
+                                <button type="submit" name="like_button" value="liked {{ movie.idMovie }}" class="btn btn-outline-danger">Like</button>
+                            {% endif %}
+                            {% if movie.idMovie in session.user.watched.keys() %}
+                                <button type="submit" class="btn btn-outline-success active">Watched</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-outline-success">Watched</button>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        Log in to like or mark movie as watched.
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">

@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 import os
 from passlib.hash import sha256_crypt
 from functools import wraps
+import json
 
 from dbCommunication import Connector, UserDataBase, MovieDatabase
 # Create instances UserDatabase and MovieDatatbase
@@ -43,7 +44,13 @@ def login():
                 session['logged_in'] = True
                 email = user_dict['email']
                 phone = user_dict['phone']
-                session['user'] = {'username': username, 'email': email, 'phone': phone}
+                liked = json.loads(user_dict['liked'])
+                watched = json.loads(user_dict['watched'])
+                session['user'] = {'username': username,
+                                   'email': email,
+                                   'phone': phone,
+                                   'liked': liked,
+                                   'watched': watched}
                 # Rederect to main page
                 return redirect(url_for('main_page'))
             else:
@@ -124,6 +131,17 @@ def register():
 
 @app.route("/movie/<id>", methods=["POST", "GET"])
 def movie(id):
+    # todo update jsons in database
+    if request.method == "POST":
+        if request.form["like_button"].split(" ")[0] == "liked":
+            # Add to session liked todo update json in database
+            session['user']['liked'][id] = "Test"
+            print(session['user']['liked'])
+        elif request.form["like_button"].split(" ")[0] == "unliked":
+            if id in session['user']['liked'].keys():
+                del session['user']['liked'][id]
+                print(session['user']['liked'])
+
     movie_data = mdb.search_movie_by_id(id)[0]
     return render_template("movie_page.html", movie=movie_data)
 
@@ -139,6 +157,10 @@ def user_profile(username):
 def main_page():
     # todo v main_page.html ne dela isAdult
     if request.method == "POST":
+        """if request.form.get('like_button').split(' ')[0] == 'liked':
+            print("Liked")
+        elif request.form.get('like_button').split(' ')[0] == 'unliked':
+            print("unliked")"""
         # Get search_button pressed
         if request.form.get("search_button", False) == 'submit':
             # Get text from search box
@@ -152,6 +174,7 @@ def main_page():
                 search_resoults, movie_data = mdb.search_by_keyword(search_text)
                 movies = movie_data
                 return render_template("main_page.html", movies=movies, search_resoults=search_resoults)
+
 
     movie_data = mdb.random_new_movies()
     movies = movie_data['movies']
