@@ -1,3 +1,4 @@
+  
 import mysql.connector
 from image_scraping import *
 from auth import AUTH
@@ -337,84 +338,15 @@ class MovieDatabase(Connector):
                 if from/to == -1, do all
         :return: the same
         """
-        def get_all_movies():
+        def get_all_movie_by_idstring(id_string):
             """Searches movies"""
-
-            # List to save the movie data in based on id, used for interjection
-            movies_data = {}
+            data = []
             # Create cursor
             self.create_cursor()
-            code = "SELECT * FROM movie"
-            param = (None)
+            code = "SELECT * FROM movie WHERE idMovie IN (%s)"
+            param = (id_string,)
             self.cur.execute(code, param)
 
-            # Save all of the data for movies
-            for movie in self.cur:
-                idMovie = movie['idMovie']
-                title = movie['title']
-                isAdult = movie['isAdult']
-                releaseYear = movie['releaseYear']
-                runtimeMinutes = movie['runtimeMinutes']
-                rating = movie['rating']
-                numVotes = movie['numVotes']
-
-                movies_dict = {'title': title,
-                               'isAdult': isAdult,
-                               'releaseYear': releaseYear,
-                               'runtimeMinutes': runtimeMinutes,
-                               'rating': rating,
-                               'numVotes': numVotes}
-                movies_data[idMovie] = movies_dict
-            return movies_data
-
-        all_movies = get_all_movies()
-        print("Done get_all movies")
-
-        def get_movie_by_genre(genre):
-            '''Searches movies by genres'''
-
-            # List to save the movie data in based on id, used for interjection
-            movies_data = {}
-            # Create cursor
-            self.create_cursor()
-            code = "SELECT movie.* FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName = %s"
-            param = (genre,)
-            self.cur.execute(code, param)
-
-            # Save all of the data for movies
-            for movie in self.cur:
-                idMovie = movie['idMovie']
-                title = movie['title']
-                isAdult = movie['isAdult']
-                releaseYear = movie['releaseYear']
-                runtimeMinutes = movie['runtimeMinutes']
-                rating = movie['rating']
-                numVotes = movie['numVotes']
-
-                movies_dict = {'title': title,
-                               'isAdult': isAdult,
-                               'releaseYear': releaseYear,
-                               'runtimeMinutes': runtimeMinutes,
-                               'rating': rating,
-                               'numVotes': numVotes}
-                movies_data[idMovie] = movies_dict
-
-            if movies_data == {}:
-                return all_movies
-            return movies_data
-        
-        def get_movie_by_director(name):
-            '''Searches movies by director'''
-
-            # List to save the movie data in based on id, used for interjection
-            movies_data = {}
-            # Create cursor
-            self.create_cursor()
-            code = "SELECT movie.* FROM movie JOIN team ON team.idMovie = movie.idMovie JOIN writersanddirectors ON team.idWritersAndDirectors = writersanddirectors.idWritersAndDirectors WHERE writersanddirectors.name = %s"
-            param = (name,)
-            self.cur.execute(code, param)
-
-            # Save all of the data for movies
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 title = movie['title']
@@ -427,39 +359,167 @@ class MovieDatabase(Connector):
                 img_url = get_google_image_link(title + " " + str(releaseYear))
                 additional_data = get_movie_details(id)
 
-                movies_dict = {'title': title,
+                movies_dict = {'idMovie': idMovie,
+                               'title': title,
                                'isAdult': isAdult,
                                'releaseYear': releaseYear,
                                'runtimeMinutes': runtimeMinutes,
                                'rating': rating,
-                               'numVotes': numVotes}
-                movies_data[idMovie] = movies_dict
-            if movies_data == {}:
-                return all_movies
-            return movies_data
-
-        def join_all():
-             """dict('release_year': dict('from': , 'to': ),
-                            'genre': str(),
-                            'duration': dict('from': , 'to': ),
-                            'directed_by': str(),
-                            'number_of_votes': dict('from': , 'to': ),
-                            'rating': dict('from': , 'to': ))"""
-             data = []
-             print("Done d2")
-             d3 = get_movie_by_director(parameters['directed_by'])
-             print("Done d3")
-             d5 = get_movie_by_genre(parameters['genre'])
-             print("Done d5")
-
-            
-             common_ids = d3.keys() & d5.keys()
-             for mov_id in all_movies:
-                 if mov_id in common_ids:
-                     data.append(all_movies[mov_id])
-             return data
+                               'numVotes': numVotes,
+                               'img_url': img_url,
+                               'description': additional_data['description']}
+                data.append(movies_dict)
+            return data
         
-        return join_all()
+        def get_all_movie_ids():
+            """Searches movies"""
+
+            # List to save the movie data in based on id, used for interjection
+            movies_ids_tmp = {}
+            # Create cursor
+            self.create_cursor()
+            code = "SELECT idMovie FROM movie"
+            param = (None)
+            self.cur.execute(code, param)
+
+            # Save all of the data for movies
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                movies_ids_tmp[idMovie] = None
+                
+            return movies_ids_tmp
+
+        def get_movieid_by_genre(genre):
+            '''Searches movies by genres'''
+
+            # List to save the movie data in based on id, used for interjection
+            genre_movies_ids_tmp = {}
+            # Create cursor
+            self.create_cursor()
+            code = "SELECT movie.idMovie FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName = %s"
+            param = (genre,)
+            self.cur.execute(code, param)
+
+            # Save all of the data for movies
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                genre_movies_ids_tmp[idMovie] = None
+                
+            return genre_movies_ids_tmp
+        
+        def get_movieid_by_director(name):
+            '''Searches movies by director'''
+
+            # List to save the movie data in based on id, used for interjection
+            director_movies_ids_tmp = {}
+            # Create cursor
+            self.create_cursor()
+            code = "SELECT movie.* FROM movie JOIN team ON team.idMovie = movie.idMovie JOIN writersanddirectors ON team.idWritersAndDirectors = writersanddirectors.idWritersAndDirectors WHERE writersanddirectors.name = %s"
+            param = (name,)
+            self.cur.execute(code, param)
+
+            # Save all of the data for movies
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                director_movies_ids_tmp[idMovie] = None
+            
+            return director_movies_ids_tmp
+
+        def get_movieid_by_all_else(code,param):
+            
+            other_movies_ids_tmp = {}
+            # Create cursor
+            self.create_cursor()
+            self.cur.execute(code, param)
+
+            # Save all of the data for movies
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                other_movies_ids_tmp[idMovie] = None
+            
+            return other_movies_ids_tmp
+
+        def join_all_return_ids(directors_ids,genres_ids,other_ids):
+
+            movie_ids = []
+            common_ids = directors_ids.keys() & genres_ids.keys() & other_ids.keys()
+            for id in common_ids:
+                movie_ids.append(id)
+            return movie_ids
+
+                
+        def call(parameters):
+            '''calls stuff does stuff makes stuff we need'''
+            
+            join_this = []
+            code = 'SELECT idMovie FROM movie WHERE'
+            param = []
+            i_did_it = False
+            other_ids = {}
+            genres_ids = {}
+            directors_ids = {}
+            if 'release_year' in parameters.keys():
+                code += 'releaseYear > %s AND releaseYear < %s AND'
+                param.append(parameters['release_year']['from'], parameters['release_year']['to'])
+                i_did_it = True
+
+            if 'duration' in parameters.keys():
+                code += 'runtimeMinutes > %s AND runtimeMinutes < %s AND'
+                param.append(parameters['duration']['from'], parameters['duration']['to'])
+                i_did_it = True
+
+            if 'number_of_votes' in parameters.keys():
+                code += 'numVotes > %s AND numVotes < %s AND'
+                param.append(parameters['number_of_votes']['from'], parameters['number_of_votes']['to'])
+                i_did_it = True
+                
+            if 'rating' in parameters.keys():
+                code += 'rating > %s AND rating < %s AND'
+                param.append(parameters['rating']['from'], parameters['rating']['to'])
+                i_did_it = True
+                
+            if i_did_it = True:
+                code += '1'
+                other_ids = get_movieid_by_all_else(code,tuple(param))
+    
+            if 'genre' in parameters.keys():
+                genres_ids = get_movieid_by_genre(parameters['genre'])
+
+            if 'directed_by' in parameters.keys():
+                directors_ids = get_movieid_by_director(parameters['directed_by'])
+
+
+            join_this.append(other_ids)
+            join_this.append(directors_ids)
+            join_this.append(genres_ids)
+
+            if {} in join_this:
+                all_ids = get_all_movie_ids()
+                
+            if directors_ids == {}:
+                directors_ids = all_ids
+                
+            if genres_ids == {}:
+                genres_ids = all_ids
+                
+            if other_ids == {}:
+                other_ids = all_ids
+                
+            mov_ids = join_all_return_ids(directors_ids, genres_ids, other_ids)
+            string_of_ids = ''
+            i = 0
+            for id in mov_ids:
+                if i == 0:
+                    string_of_ids += id
+                    i = 1
+                else:
+                    string_of_ids = string_of_ids + ',' + id
+                    
+            final_squad = get_all_movie_by_idstring(string_of_ids)
+                
+            return final_squad
+      
+        return call(parameters)
 
 
     def get_movie_by_param_randomized(self, param):
@@ -517,6 +577,7 @@ class MovieDatabase(Connector):
                 movies_data.append(movies_dict)
 
             return movies_data
+        
 
 
 if __name__ == "__main__":
