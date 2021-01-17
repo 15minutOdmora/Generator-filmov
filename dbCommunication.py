@@ -85,7 +85,7 @@ class UserDataBase(Connector):
         # Close cursor
         self.close_cursor()
 
-    def check_user_registration_params(self, username = '', email = '', phone = ''):
+    def check_user_registration_params(self, username='', email='', phone=''):
         """ Todo
         Function checks if username, email, phone are already in the user table
         :param username: users username
@@ -126,7 +126,7 @@ class UserDataBase(Connector):
             # Create cursor
             self.create_cursor()
             code = "SELECT idUser FROM User WHERE phoneNumber = %s"
-            param = (phoneNumber)
+            param = (phone)
             self.cur.execute(code, param)
             for user in self.cur:
                 self.close_cursor()
@@ -136,15 +136,15 @@ class UserDataBase(Connector):
             return True
         
         if not username():
-            return False,'username'
+            return False, 'username'
         
         if not email():
-            return False,'email'
+            return False, 'email'
 
         if not phone():
-            return False,'phone'
+            return False, 'phone'
 
-    return True,'working'
+        return True, 'working'
 
     def delete_existing_user(self, id):
         """
@@ -214,6 +214,7 @@ class UserDataBase(Connector):
         # Should only be one username in database
         for user in self.cur:
             id_user = user['idUser']
+            username = user['username']
             password = user['password']
             email = user['email']
             phone = user['phoneNumber']
@@ -221,16 +222,15 @@ class UserDataBase(Connector):
             watched = json.loads(user['watched'])
             self.close_cursor()
             data = {'idUser': id_user,
-            'username': username,
-            'password': password,
-            'email': email,
-            'phone': phone,
-            'liked': liked,
-            'watched': watched}
+                    'username': username,
+                    'password': password,
+                    'email': email,
+                    'phone': phone,
+                    'liked': liked,
+                    'watched': watched}
             
-            return  True,data
-        return False,{}
-
+            return True, data
+        return False, {}
 
     def save_watched_to_user(self, username, watched):
         """
@@ -290,7 +290,7 @@ class UserDataBase(Connector):
             # Create cursor
             self.create_cursor()
             code = "INSERT INTO opinion(idUser, idMovie, opinion) VALUES (%s, %s, %s )"
-            param = (self.get_user_by_username(username)[1]['idUser'],idMovie, opinion)
+            param = (self.get_user_by_username(username)[1]['idUser'], idMovie, opinion)
             # Execute the code
             self.cur.execute(code, param)
             # Commit to database
@@ -300,7 +300,6 @@ class UserDataBase(Connector):
         except:
             return False
         return True
-        
 
     def get_all_opinions_of_user(self, username):
         """
@@ -311,7 +310,7 @@ class UserDataBase(Connector):
         data = {}
         self.create_cursor()
         code = "SELECT opinion.idMovie,opinion.opinion FROM opinion JOIN user ON opinion.idUser = user.idUser WHERE user.username = %s"
-        param = (username)
+        param = (username,)
         # Execute the code
         self.cur.execute(code, param)
 
@@ -416,7 +415,7 @@ class MovieDatabase(Connector):
         return {"movies": movies_data}
 
     def search_movie_by_id(self, id):
-        """
+        """ TODO add genres of movie
         Function: Returns a movies list containing movie dicts. of the id
         :param id: idMovie
         :return: list[dict('idMovie': , 'title': , ...)]
@@ -425,6 +424,7 @@ class MovieDatabase(Connector):
         movies_data = []
         # Create cursor
         self.create_cursor()
+        # TODO add genre
         code = "SELECT * FROM movie WHERE idMovie = %s"
         param = (id,)
         self.cur.execute(code, param)
@@ -438,6 +438,7 @@ class MovieDatabase(Connector):
             runtimeMinutes = movie['runtimeMinutes']
             rating = movie['rating']
             numVotes = movie['numVotes']
+            # todo add genre
 
             img_url = get_google_image_link(title + " " + str(releaseYear))
             additional_data = get_movie_details(id)
@@ -451,6 +452,7 @@ class MovieDatabase(Connector):
                            'numVotes': numVotes,
                            'img_url': img_url,
                            'description': additional_data['description']}
+                         # 'genre': [genre1, genre2, ...] todo
             movies_data.append(movies_dict)
 
         return movies_data
