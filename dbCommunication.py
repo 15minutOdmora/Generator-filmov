@@ -491,13 +491,19 @@ class MovieDatabase(Connector):
             if i_did_it:
                 code += ' 1'
                 other_ids = get_movieid_by_all_else(code, tuple(param))
-    
+                if other_ids == {}:
+                    return {}
+                
             if 'genre' in parameters.keys():
                 genres_ids = get_movieid_by_genre(parameters['genre'])
-
+                if genres_ids == {}:
+                    return {}
+                
             if 'directed_by' in parameters.keys():
                 directors_ids = get_movieid_by_director(parameters['directed_by'])
-
+                if directors_ids == {}:
+                    return {}
+                
             join_this.append(other_ids)
             join_this.append(directors_ids)
             join_this.append(genres_ids)
