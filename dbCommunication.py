@@ -1,6 +1,7 @@
 import mysql.connector
 from image_scraping import *
 from auth import AUTH
+import json
 
 
 class Connector:
@@ -31,8 +32,12 @@ class Connector:
         :param code: string containing code to be executed in MySql
         :param param: touple containing values to be used in the string code
         """
+
         if self.cur is not None:
-            self.cur.execute(code, param)
+            if param is None:
+                self.cur.execute(code, param)
+            else:
+                self.cur.execute(code, param)
         else:
             print("Cursor does not exist.")
             raise
@@ -58,14 +63,18 @@ class UserDataBase(Connector):
         # Create cursor
         self.create_cursor()
 
+        # Create liked and watched Json files, dumpt them into string
+        liked = json.dumps({})
+        watched = json.dumps({})
+
         # Check if phone or email was given
         if phone is None and email is not None:
-            code = "INSERT INTO User(username, password, email) VALUES (%s, %s, %s)"
-            param = (username, password, email)
+            code = "INSERT INTO User(username, password, email, liked, watched) VALUES (%s, %s, %s, %s, %s)"
+            param = (username, password, email, liked, watched)
 
         elif email is None and phone is not None:
-            code = "INSERT INTO User(username, password, phone) VALUES (%s, %s, %s)"
-            param = (username, password, phone)
+            code = "INSERT INTO User(username, password, phone, liked, watched) VALUES (%s, %s, %s, %s, %S)"
+            param = (username, password, phone, liked, watched)
 
         # Execute the code
         self.cur.execute(code, param)
@@ -131,11 +140,12 @@ class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
         """ todo popravi opis funkcije
+            todo SELECT writersanddirectors.*, COUNT(team.idWritersAndDirectors) FROM writersanddirectors join team on writersanddirectors.idWritersAndDirectors = team.idWritersAndDirectors group by (writersanddirectors.name)
         Function gets a keyword that was typed in the search box, returns all the results.
         Search by keyword on main page(could be actor, movie, genre...)
         :param keyword: string
         :return: int(number_of_matches), dict("movies": sorted(list[dict("movieId": , "title": , "year": , ...)]),
-                                              "actor": sorted(list[dict("actorId": , "age": , ...))])
+                                              "directors": sorted(list[dict("actorId": , "age": , ...))])
         List should be sorted decreasing by number of votes for movies, decreasing by number of roles for actor
         """
         # we only have directors / writers
@@ -145,7 +155,7 @@ class MovieDatabase(Connector):
         movies_data = []
         writers_and_directors_data = []
         # Add % for keyword search
-        keyword += '%'
+        keyword = '%' + keyword + '%'
         # Create cursor for movies
         self.create_cursor()
 
@@ -180,9 +190,17 @@ class MovieDatabase(Connector):
 
         return number_of_matches, movies_data
 
+    def search_by_integer(self, integer):
+        """ todo get keyword, search movies, int search by releaseYear(movies and directors)
+        Function: Returns movies where search word was an integer, first search by title and then by releaseYear
+        :param integer:
+        :return: sorted(dict(of movies)), sorted: movies with intiger in title first, then movies by release year
+        """
+        pass
+
     def random_new_movies(self):
-        """ todo Create order dict by numVotes
-        Function returns a dict containing a sorted list of 10 random new-er movies.
+        """
+        Function returns a dict containing a sorted list of 5 random new-er movies.
         :return: dict("movies": sorted(list["movieId": , ...]))
         Newer movies have a higher chance of being selected, so the random returned dict should be mostly movies
         made between 2010 - 2020, with a small chance of older movies. //
@@ -216,7 +234,7 @@ class MovieDatabase(Connector):
         """
         Function: Returns a movies list containing movie dicts. of the id
         :param id: idMovie
-        :return: list[dict("movies": list["movieId": , ...])]
+        :return: list[dict('idMovie': , 'title': , ...)]
         """
         # List to save the movie data in
         movies_data = []
@@ -249,6 +267,74 @@ class MovieDatabase(Connector):
                            'img_url': img_url,
                            'description': additional_data['description']}
             movies_data.append(movies_dict)
+
+        return movies_data
+
+    def get_movie_by_param(self, param):
+        """ todo Function that returns movie/director data based on search inputs saved in dict param
+            todo should add: If key not in param, user did not select that
+        :param param: dict('release_year': dict('from': , 'to': ),
+                            'genre': str(),
+                            'duration': dict('from': , 'to': ),
+                            'directed_by': str(),
+                            'number_of_votes': dict('from': , 'to': ),
+                            'rating': dict('from': , 'to': ))
+                if from/to == -1, do all
+        :return: the same
+        """
+
+    def get_movie_by_param_randomized(self, param):
+        """ todo Function that returns one movie based on param, randomized from all the movies that fit param measures
+            todo call get_movie_by_param(self, param):
+            todo should add: If key not in param, user did not select that
+        :param param: dict('release_year': dict('from': , 'to': ),
+                            'genre': str(),
+                            'duration': dict('from': , 'to': ),
+                            'directed_by': str(),
+                            'number_of_votes': dict('from': , 'to': ),
+                            'rating': dict('from': , 'to': ))
+                if from/to == -1, do all
+        :return: the same
+        """
+
+    def search_movie_by_multiple_ids(self, id_list):
+        """
+        Function: Returns a movies list containing movie dicts. of the ids in the id_list
+        :param id: list containing movie ids
+        :return: list[dict('idMovie': , 'title': , ...)]
+        """
+        # List to save the movie data in
+        movies_data = []
+        for id in id_list:
+            # Create cursor
+            self.create_cursor()
+            code = "SELECT * FROM movie WHERE idMovie = %s"
+            param = (id,)
+            self.cur.execute(code, param)
+
+            # Save all of the data for movies
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                title = movie['title']
+                isAdult = movie['isAdult']
+                releaseYear = movie['releaseYear']
+                runtimeMinutes = movie['runtimeMinutes']
+                rating = movie['rating']
+                numVotes = movie['numVotes']
+
+                img_url = get_google_image_link(title + " " + str(releaseYear))
+                additional_data = get_movie_details(id)
+
+                movies_dict = {'idMovie': idMovie,
+                               'title': title,
+                               'isAdult': isAdult,
+                               'releaseYear': releaseYear,
+                               'runtimeMinutes': runtimeMinutes,
+                               'rating': rating,
+                               'numVotes': numVotes,
+                               'img_url': img_url,
+                               'description': additional_data['description']}
+                movies_data.append(movies_dict)
 
         return movies_data
 

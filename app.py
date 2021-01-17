@@ -113,7 +113,7 @@ def register():
 
         # Set logged in session to true, create user dict.
         session['logged_in'] = True
-        session['user'] = {'username': username, 'email': email, 'phone': phone}
+        session['user'] = {'username': username, 'email': email, 'phone': phone, 'liked': {}, 'watched': {}}
 
         # Rederect to main page
         return redirect(url_for('main_page'))
@@ -131,7 +131,7 @@ def movie(id):
 @app.route("/users/<username>", methods=["POST", "GET"])
 def user_profile(username):
     # Todo make search by id
-    user_data = udb.get_user_by_username(username)
+    is_in_database, user_data = udb.get_user_by_username(username)
     return render_template("user_profile.html", user_data=user_data)
 
 

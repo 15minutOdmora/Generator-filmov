@@ -6,6 +6,86 @@
 
 {% block content %}
 <form method="post">
-
+    <div class="container emp-profile max-width">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                                    <h5>
+                                        Username: {{ user_data.username }}
+                                    </h5>
+                                    <h6>
+                                        Email/Phone: {{ user_data.email }}
+                                    </h6>
+                                    <p class="proile-rating">Length: <span>Neki</span></p>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Liked</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Watched</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row" style="padding-top: 15px;">
+                                            <div class="col-md-6">
+                                                <label>Total liked movies</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>Number of movies.</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Rating</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>neki 2</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Number of votes</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>neki 3</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>IMDb</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>neki 4</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>To do</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>To even more do</p>
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Druga stran</label><br/>
+                                        <p>opis</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+    </div>
 </form>
 {% endblock %}

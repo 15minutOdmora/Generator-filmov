@@ -26,14 +26,26 @@ def get_movie_details(movieId):
                                   'Stars'; list(dict('link': , 'name': ), ...))
     """
     url = "https://www.imdb.com/title/{}/".format(movieId)
+    url_desc = "https://www.imdb.com/title/{}/plotsummary?ref_=tt_ov_pl".format(movieId)
     data = {}
     r = requests.get(url=url)
     # Create a BeautifulSoup object
     soup = BeautifulSoup(r.text, 'html.parser')
 
+
     # summary
     summary_text = soup.find("div", {'class':'summary_text'})
-    data["description"] = summary_text.string.strip()
+    try:
+        data["description"] = summary_text.string.strip()
+    except:
+        try:
+            r_new = requests.get(url=url_desc)
+            soup = BeautifulSoup(r_new.text, 'html.parser')
+            summary_text = soup.find("p")
+            data["description"] = summary_text.string.strip()
+        except:
+            data["description"] = "No description available :("
+
 
     credit_summary_item = soup.find_all("div", {'class':'credit_summary_item'})
     data["credits"] = {}
