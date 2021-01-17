@@ -53,7 +53,7 @@ class Connector:
 class UserDataBase(Connector):
 
     def add_new_user(self, username, password, email=None, phone=None):
-        """ todo check if username already exists
+        """ Todo call the function below
         Method: Adds new user into db in the table Uporabnik
         :param username: The username of the user
         :param password: Password of the user
@@ -85,6 +85,16 @@ class UserDataBase(Connector):
 
         # Close cursor
         self.close_cursor()
+
+    def check_user_registration_params(self, username, email, phone):
+        """ Todo
+        Function checks if username, email, phone are already in the user table
+        :param username: users username
+        :param email: users email
+        :param phone: users phone
+        :return: True/False
+        """
+        pass
 
     def delete_existing_user(self, id):
         """
@@ -192,11 +202,29 @@ class UserDataBase(Connector):
         except:
             return False
 
+    def save_opinion_of_movie(self, username, idMovie, opinion):
+        """
+        Function saves given opinion about the movie to the user opinion table
+        :param username: users username
+        :param idMovie: id of movie
+        :param opinion: str("Luka suvcks balizz")
+        :return: True/False if successful
+        """
+        pass
+
+    def get_all_opinions_of_user(self, username):
+        """
+        Function returns a data list of movie ids and opinions the user has saved
+        :param username: users username
+        :return: {'literally id of movie': 'opinion', 'ex. tt123456': 'I very liked this movie', ...}
+        """
+        pass
+
+
 class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
-        """ todo popravi opis funkcije
-            todo SELECT writersanddirectors.*, COUNT(team.idWritersAndDirectors) FROM writersanddirectors join team on writersanddirectors.idWritersAndDirectors = team.idWritersAndDirectors group by (writersanddirectors.name)
+        """ ONLY MOVIE NAMES
         Function gets a keyword that was typed in the search box, returns all the results.
         Search by keyword on main page(could be actor, movie, genre...)
         :param keyword: string
@@ -453,9 +481,8 @@ class MovieDatabase(Connector):
             print("movie_ids", movie_ids)
             return movie_ids
 
-                
         def call(parameters):
-            '''calls stuff does stuff makes stuff we need'''
+            """ calls stuff does stuff makes stuff we need """
             
             join_this = []
             code = 'SELECT idMovie FROM movie WHERE'
@@ -599,9 +626,10 @@ if __name__ == "__main__":
     mdb = MovieDatabase()
     """print(mdb.random_new_movies())"""
     param = {'release_year': {'from': 1990, 'to': 2020},
-            'duration': {'from': 60, 'to': 120},
-            'directed_by': "0",
-            'number_of_votes': {'from': 200, 'to': 10000},
-            'rating': {'from': 8, 'to': 10}}
+             'genre': 'Romance',
+             'duration': {'from': 60, 'to': 120},
+             'directed_by': "0",
+             'number_of_votes': {'from': 200, 'to': 10000},
+             'rating': {'from': 8, 'to': 10}}
     print(mdb.get_movie_by_param(param))
     pass

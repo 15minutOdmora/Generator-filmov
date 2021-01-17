@@ -18,7 +18,6 @@ app.secret_key = os.urandom(24)
 # User login
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    # todo Access user liked, watched jsons and save to session user
     if request.method == "POST":
         # If register button was clicked, redirect
         if request.form.get("submit_button", False) == "not_registered":
@@ -86,7 +85,6 @@ def is_logged_in(f):
 # User registration
 @app.route("/register", methods=["POST", "GET"])
 def register():
-    # todo Access user liked, watched json data and save to session user
     # todo Writing an email already written returns MySql error
     if request.method == "POST":
         email_phone = request.form["email-phone"]
