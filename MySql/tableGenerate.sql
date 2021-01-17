@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Movie` (
   `runtimeMinutes` INT NULL,
   `rating` FLOAT NULL,
   `numVotes` INT NULL,
-  'imgUrl' VARCHAR(500) NULL,
+  `imgUrl` VARCHAR(500) NULL,
   PRIMARY KEY (`idMovie`),
   INDEX `Title` (`title` ASC))
 ENGINE = InnoDB;
