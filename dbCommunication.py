@@ -124,8 +124,8 @@ class UserDataBase(Connector):
             password = user['password']
             email = user['email']
             phone = user['phoneNumber']
-            liked = user['liked']
-            watched = user['watched']
+            liked = json.loads(user['liked'])
+            watched = json.loads(user['watched'])
 
         self.close_cursor()
 
@@ -343,10 +343,9 @@ class MovieDatabase(Connector):
             data = []
             # Create cursor
             self.create_cursor()
-            code = "SELECT * FROM movie WHERE idMovie IN (%s)"
-            param = (id_string,)
-            self.cur.execute(code, param)
-
+            code = "SELECT * FROM movie WHERE idMovie IN (" + id_string + ")"
+            self.execute(code, None)
+            print(self.cur)
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 title = movie['title']
@@ -356,8 +355,8 @@ class MovieDatabase(Connector):
                 rating = movie['rating']
                 numVotes = movie['numVotes']
 
-                img_url = get_google_image_link(title + " " + str(releaseYear))
-                additional_data = get_movie_details(id)
+                """img_url = get_google_image_link(title + " " + str(releaseYear))
+                additional_data = get_movie_details(id)"""
 
                 movies_dict = {'idMovie': idMovie,
                                'title': title,
@@ -365,10 +364,10 @@ class MovieDatabase(Connector):
                                'releaseYear': releaseYear,
                                'runtimeMinutes': runtimeMinutes,
                                'rating': rating,
-                               'numVotes': numVotes,
-                               'img_url': img_url,
-                               'description': additional_data['description']}
+                               'numVotes': numVotes}
                 data.append(movies_dict)
+
+            print("data", data)
             return data
         
         def get_all_movie_ids():
@@ -386,7 +385,9 @@ class MovieDatabase(Connector):
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 movies_ids_tmp[idMovie] = None
-                
+
+            # print("movie_ids_tmp", movies_ids_tmp)
+            print("Im here")
             return movies_ids_tmp
 
         def get_movieid_by_genre(genre):
@@ -404,7 +405,8 @@ class MovieDatabase(Connector):
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 genre_movies_ids_tmp[idMovie] = None
-                
+
+            print("genre_movies_ids_tmp", genre_movies_ids_tmp)
             return genre_movies_ids_tmp
         
         def get_movieid_by_director(name):
@@ -422,10 +424,11 @@ class MovieDatabase(Connector):
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 director_movies_ids_tmp[idMovie] = None
-            
+
+            print("director_movies_ids_tmp", director_movies_ids_tmp)
             return director_movies_ids_tmp
 
-        def get_movieid_by_all_else(code,param):
+        def get_movieid_by_all_else(code, param):
             
             other_movies_ids_tmp = {}
             # Create cursor
@@ -436,7 +439,8 @@ class MovieDatabase(Connector):
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 other_movies_ids_tmp[idMovie] = None
-            
+
+            print("other_movies_ids_tmp", other_movies_ids_tmp)
             return other_movies_ids_tmp
 
         def join_all_return_ids(directors_ids,genres_ids,other_ids):
@@ -445,6 +449,8 @@ class MovieDatabase(Connector):
             common_ids = directors_ids.keys() & genres_ids.keys() & other_ids.keys()
             for id in common_ids:
                 movie_ids.append(id)
+
+            print("movie_ids", movie_ids)
             return movie_ids
 
                 
@@ -459,35 +465,38 @@ class MovieDatabase(Connector):
             genres_ids = {}
             directors_ids = {}
             if 'release_year' in parameters.keys():
-                code += 'releaseYear > %s AND releaseYear < %s AND'
-                param.append(parameters['release_year']['from'], parameters['release_year']['to'])
+                code += ' releaseYear > %s AND releaseYear < %s AND'
+                param.append(parameters['release_year']['from'])
+                param.append(parameters['release_year']['to'])
                 i_did_it = True
 
             if 'duration' in parameters.keys():
-                code += 'runtimeMinutes > %s AND runtimeMinutes < %s AND'
-                param.append(parameters['duration']['from'], parameters['duration']['to'])
+                code += ' runtimeMinutes > %s AND runtimeMinutes < %s AND'
+                param.append(parameters['duration']['from'])
+                param.append(parameters['duration']['to'])
                 i_did_it = True
 
             if 'number_of_votes' in parameters.keys():
-                code += 'numVotes > %s AND numVotes < %s AND'
-                param.append(parameters['number_of_votes']['from'], parameters['number_of_votes']['to'])
+                code += ' numVotes > %s AND numVotes < %s AND'
+                param.append(parameters['number_of_votes']['from'])
+                param.append(parameters['number_of_votes']['to'])
                 i_did_it = True
                 
             if 'rating' in parameters.keys():
-                code += 'rating > %s AND rating < %s AND'
-                param.append(parameters['rating']['from'], parameters['rating']['to'])
+                code += ' rating > %s AND rating < %s AND'
+                param.append(parameters['rating']['from'])
+                param.append(parameters['rating']['to'])
                 i_did_it = True
                 
-            if i_did_it = True:
-                code += '1'
-                other_ids = get_movieid_by_all_else(code,tuple(param))
+            if i_did_it:
+                code += ' 1'
+                other_ids = get_movieid_by_all_else(code, tuple(param))
     
             if 'genre' in parameters.keys():
                 genres_ids = get_movieid_by_genre(parameters['genre'])
 
             if 'directed_by' in parameters.keys():
                 directors_ids = get_movieid_by_director(parameters['directed_by'])
-
 
             join_this.append(other_ids)
             join_this.append(directors_ids)
@@ -510,17 +519,17 @@ class MovieDatabase(Connector):
             i = 0
             for id in mov_ids:
                 if i == 0:
-                    string_of_ids += id
+                    string_of_ids += "'" + id + "'"
                     i = 1
                 else:
-                    string_of_ids = string_of_ids + ',' + id
-                    
+                    string_of_ids = string_of_ids + ",'" + id + "'"
+
+            print(string_of_ids)
             final_squad = get_all_movie_by_idstring(string_of_ids)
                 
             return final_squad
       
         return call(parameters)
-
 
     def get_movie_by_param_randomized(self, param):
         """ todo Function that returns one movie based on param, randomized from all the movies that fit param measures
@@ -579,16 +588,14 @@ class MovieDatabase(Connector):
             return movies_data
         
 
-
 if __name__ == "__main__":
     # For testing
     mdb = MovieDatabase()
     """print(mdb.random_new_movies())"""
-    param = {'release_year': {'from': 1990, 'to': 2000},
-            'genre': "Romance",
-            'duration': {'from': 50, 'to': 120},
+    param = {'release_year': {'from': 1990, 'to': 2020},
+            'duration': {'from': 60, 'to': 120},
             'directed_by': "0",
             'number_of_votes': {'from': 200, 'to': 10000},
-            'rating': {'from': 6, 'to': 10}}
+            'rating': {'from': 8, 'to': 10}}
     print(mdb.get_movie_by_param(param))
     pass

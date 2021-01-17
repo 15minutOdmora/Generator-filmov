@@ -44,8 +44,8 @@ def login():
                 session['logged_in'] = True
                 email = user_dict['email']
                 phone = user_dict['phone']
-                liked = json.loads(user_dict['liked'])
-                watched = json.loads(user_dict['watched'])
+                liked = user_dict['liked']
+                watched = user_dict['watched']
                 session['user'] = {'username': username,
                                    'email': email,
                                    'phone': phone,

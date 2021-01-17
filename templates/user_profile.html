@@ -41,46 +41,91 @@
                                                 <p>Number of movies.</p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Rating</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>neki 2</p>
-                                            </div>
+                                            <ul class="list-unstyled">
+                                                {% for movie in liked %}
+                                                    <div class="media border p-3">
+                                                        <img src="{{ movie.img_url }}" alt="{{ movie.title }} picture" class="mr-3 mt-3" style="width:150px;">
+                                                         <div class="media-body" style="padding-left: 30px;">
+                                                             <h2><a href="{{ url_for('movie', id=movie.idMovie)}}">{{ movie.title }}</a><small><i>  {{ movie.releaseYear}}</i></small></h2>
+                                                             <a href="https://www.imdb.com/title/{{ movie.idMovie }}/">IMDb {{ movie.title }}</a>
+                                                             <p> Length: {{ movie.runtimeMinutes }}min</p>
+                                                             <p> Rating: <b>{{ movie.rating }}</b></p>
+                                                             <p> Number of votes: <b>{{ movie.numVotes }}</b></p>
+                                                             {% if movie.isAdult == 1 %}
+                                                                <p> Child safe: No</p>
+                                                             {% else %}
+                                                                <p> Child safe: Yes</p>
+                                                             {% endif %}
+                                                             {% if session.logged_in %}
+                                                                 <div class="row float-right">
+                                                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                                         <div class="input-group">
+                                                                             {% if movie.idMovie in session.user.liked.keys() %}
+                                                                                <label class="btn btn-danger disabled">Liked</label>
+                                                                             {% else %}
+                                                                                <label class="btn btn-outline-danger disabled">Liked</label>
+                                                                             {% endif %}
+                                                                             {% if movie.idMovie in session.user.watched.keys() %}
+                                                                                <label class="btn btn-success disabled">Watched</label>
+                                                                             {% else %}
+                                                                                <label class="btn btn-outline-success disabled">Watched</label>
+                                                                             {% endif %}
+                                                                         </div>
+                                                                     </div>
+                                                                 </div>
+                                                             {% endif %}
+                                                         </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </ul>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Number of votes</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>neki 3</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>IMDb</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>neki 4</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>To do</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>To even more do</p>
-                                            </div>
-                                        </div>
-                            </div>
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Druga stran</label><br/>
-                                        <p>opis</p>
-                                    </div>
+                                <div class="row" style="padding-top: 15px;">
+                                            <div class="col-md-6">
+                                                <label>Total liked movies</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>Number of movies.</p>
+                                            </div>
                                 </div>
+                                <ul class="list-unstyled">
+                                                {% for movie in watched %}
+                                                    <div class="media border p-3">
+                                                        <img src="{{ movie.img_url }}" alt="{{ movie.title }} picture" class="mr-3 mt-3" style="width:150px;">
+                                                         <div class="media-body" style="padding-left: 30px;">
+                                                             <h2><a href="{{ url_for('movie', id=movie.idMovie)}}">{{ movie.title }}</a><small><i>  {{ movie.releaseYear}}</i></small></h2>
+                                                             <a href="https://www.imdb.com/title/{{ movie.idMovie }}/">IMDb {{ movie.title }}</a>
+                                                             <p> Length: {{ movie.runtimeMinutes }}min</p>
+                                                             <p> Rating: <b>{{ movie.rating }}</b></p>
+                                                             <p> Number of votes: <b>{{ movie.numVotes }}</b></p>
+                                                             {% if movie.isAdult == 1 %}
+                                                                <p> Child safe: No</p>
+                                                             {% else %}
+                                                                <p> Child safe: Yes</p>
+                                                             {% endif %}
+                                                             {% if session.logged_in %}
+                                                                 <div class="row float-right">
+                                                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                                         <div class="input-group">
+                                                                             {% if movie.idMovie in session.user.liked.keys() %}
+                                                                                <label class="btn btn-danger disabled">Liked</label>
+                                                                             {% else %}
+                                                                                <label class="btn btn-outline-danger disabled">Liked</label>
+                                                                             {% endif %}
+                                                                             {% if movie.idMovie in session.user.watched.keys() %}
+                                                                                <label class="btn btn-success disabled">Watched</label>
+                                                                             {% else %}
+                                                                                <label class="btn btn-outline-success disabled">Watched</label>
+                                                                             {% endif %}
+                                                                         </div>
+                                                                     </div>
+                                                                 </div>
+                                                             {% endif %}
+                                                         </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </ul>
+
                             </div>
                         </div>
                     </div>
