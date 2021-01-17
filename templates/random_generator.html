@@ -24,11 +24,11 @@ function updateTextInput(val) {
                 <div class="input-group mb-5 input-lg" style="">
                   <input name="search" type="text" class="form-control input-lg" placeholder="Ex. search: Movie Name, a: Actor Name, d: Director Name" aria-label="Search" aria-describedby="basic-addon2">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" name="search_button" value="submit" type="submit">Search</button>
+                    <button class="btn btn-primary" name="search_button" value="search" type="submit">Search</button>
                   </span>
                   <span class="input-group-btn" style="padding-left: 40px;">
-                    <strong>Couldn't find a movie? Add one</strong>
-                    <button class="btn btn-primary" name="add_new_movie" value="submit" type="submit">+</button>
+                    <strong>Don't know what to watch? Generate a random movie</strong>
+                    <button class="btn btn-primary" name="search_button" value="generate" type="submit">Generate</button>
                   </span>
                 </div>
             </div>
@@ -46,15 +46,15 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input type="number" class="form-control" placeholder="1915">
+            <input name="release_year_from" type="number" class="form-control" placeholder="1915">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input type="number" class="form-control" placeholder="2020">
+            <input name="release_year_to" type="number" class="form-control" placeholder="2020">
         </div>
         <div class="col-sm-4">
             <label style="font-size: 23px;">Pick one or more genres: </label>
-            <select multiple class="form-control" id="exampleFormControlSelect">
+            <select name="select_genre" multiple class="form-control" id="exampleFormControlSelect">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -69,15 +69,15 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input type="number" class="form-control" placeholder="1915">
+            <input name="duration_from" type="number" class="form-control" placeholder="1915">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input type="number" class="form-control" placeholder="2020">
+            <input name="duration_to" type="number" class="form-control" placeholder="2020">
         </div>
         <div class="col-sm-4">
             <label style="font-size: 23px;">Directed by: </label>
-            <input class="form-control" type="text" placeholder="Ex. Quentin Tarantino">
+            <input name="directed_by" class="form-control" type="text" placeholder="Ex. Quentin Tarantino">
         </div>
     </div>
     <div class="row bg-light" style="padding-top: 40px;">
@@ -86,11 +86,11 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input type="number" class="form-control" placeholder="1915">
+            <input name="num_of_votes_from" type="number" class="form-control" placeholder="1915">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input type="number" class="form-control" placeholder="2020">
+            <input name="num_of_votes_to" type="number" class="form-control" placeholder="2020">
         </div>
     </div>
 
@@ -100,14 +100,53 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input type="number" class="form-control" placeholder="1915">
+            <input name="rating_from" type="number" class="form-control" placeholder="1915">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input type="number" class="form-control" placeholder="2020">
+            <input name="rating_to" type="number" class="form-control" placeholder="2020">
         </div>
     </div>
 
     <div class="row" style="padding-top: 60px;"></div>
+
+    <!-- movies gets passed in as a list containing movie data dicts -->
+    <ul class="list-unstyled">
+        {% for movie in movies %}
+            <div class="media border p-3">
+                <img src="{{ movie.img_url }}" alt="{{ movie.title }} picture" class="mr-3 mt-3" style="width:150px;">
+                 <div class="media-body" style="padding-left: 30px;">
+                     <h2><a href="{{ url_for('movie', id=movie.idMovie)}}">{{ movie.title }}</a><small><i>  {{ movie.releaseYear}}</i></small></h2>
+                     <a href="https://www.imdb.com/title/{{ movie.idMovie }}/">IMDb {{ movie.title }}</a>
+                     <p> Length: {{ movie.runtimeMinutes }}min</p>
+                     <p> Rating: <b>{{ movie.rating }}</b></p>
+                     <p> Number of votes: <b>{{ movie.numVotes }}</b></p>
+                     {% if movie.isAdult == 1 %}
+                        <p> Child safe: No</p>
+                     {% else %}
+                        <p> Child safe: Yes</p>
+                     {% endif %}
+                     {% if session.logged_in %}
+                         <div class="row float-right">
+                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                 <div class="input-group">
+                                     {% if movie.idMovie in session.user.liked.keys() %}
+                                        <label class="btn btn-danger disabled">Liked</label>
+                                     {% else %}
+                                        <label class="btn btn-outline-danger disabled">Liked</label>
+                                     {% endif %}
+                                     {% if movie.idMovie in session.user.watched.keys() %}
+                                        <label class="btn btn-success disabled">Watched</label>
+                                     {% else %}
+                                        <label class="btn btn-outline-success disabled">Watched</label>
+                                     {% endif %}
+                                 </div>
+                             </div>
+                         </div>
+                     {% endif %}
+                 </div>
+            </div>
+        {% endfor %}
+    </ul>
 </form>
 {% endblock %}

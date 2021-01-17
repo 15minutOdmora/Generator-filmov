@@ -129,7 +129,7 @@ def register():
 
 @app.route("/movie/<id>", methods=["POST", "GET"])
 def movie(id):
-    # todo update jsons in database
+    # todo Watched for some reason isn't working
     if request.method == "POST":
         if request.form["save_button"].split(" ")[0] == "liked":
             # Add to session liked
@@ -172,6 +172,96 @@ def user_profile(username):
         return render_template("<h2>This user does not exist</h2>")
 
 
+def param_cleaner(param_dict):
+    """
+    Helper function for random_generator, cleans the fiven param_dict of 'empty' values
+    :param param_dict: param_dict from random_generator
+    :return: param_dict_cleaned
+    """
+    def generate_number_from_type(type, to_from, value):
+        if value == 0:
+            if type == 'release_year':
+                if to_from == 'from':
+                    return 1900
+                elif to_from == 'to':
+                    return 2030
+            if type == 'duration':
+                if to_from == 'from':
+                    return 0
+                elif to_from == 'to':
+                    return 1000
+            if type == 'number_of_votes':
+                if to_from == 'from':
+                    return 0
+                elif to_from == 'to':
+                    return 10000000
+            if type == 'rating':
+                if to_from == 'from':
+                    return 0
+                elif to_from == 'to':
+                    return 11
+        return value
+
+    cleaned = dict()
+    for key, value in param_dict.items():
+        if isinstance(value, dict):
+            if value['to'] == '' and value['from'] == '':
+                pass
+            else:
+                cleaned[key] = {'from': 0, 'to': 0}
+                cleaned[key]['from'] = generate_number_from_type(key, 'from', param_dict[key]['from'])
+                cleaned[key]['to'] = generate_number_from_type(key, 'to', param_dict[key]['to'])
+        else:
+            if value == '' or value == 0:
+                pass
+            else:
+                cleaned[key] = value
+
+    return cleaned
+
+
+@app.route("/random_generator", methods=["POST", "GET"])
+def random_generator():
+    if request.method == "POST":
+        params_dict = {'release_year': {'from': 0, 'to': 0},
+                        'genre': '',
+                        'duration': {'from': 0, 'to': 0},
+                        'directed_by': '',
+                        'number_of_votes': {'from': 0, 'to': 0},
+                        'rating': {'from': 0, 'to': 0}}
+
+        # If Search button was clicked
+        if request.form.get("search_button", False) == 'search':
+            params_dict["release_year"]["from"] = request.form["release_year_from"]
+            params_dict["release_year"]["to"] = request.form["release_year_to"]
+            # params_dict["genre"] = request.form["select_genre"]
+            params_dict["duration"]["from"] = request.form["duration_from"]
+            params_dict["duration"]["to"] = request.form["duration_to"]
+            params_dict["directed_by"] = request.form["directed_by"]
+            params_dict["number_of_votes"]["from"] = request.form["num_of_votes_from"]
+            params_dict["number_of_votes"]["to"] = request.form["num_of_votes_to"]
+            params_dict["rating"]["from"] = request.form["rating_from"]
+            params_dict["rating"]["to"] = request.form["rating_to"]
+            movies = mdb.get_movie_by_param(param_cleaner(params_dict))
+            return render_template("random_generator.html", movies=movies)
+
+        # If Generate button was clicked
+        if request.form.get("search_button", False) == 'generate':
+            params_dict["release_year"]["from"] = request.form["release_year_from"]
+            params_dict["release_year"]["to"] = request.form["release_year_to"]
+            # params_dict["genre"] = request.form["select_genre"]
+            params_dict["duration"]["from"] = request.form["duration_from"]
+            params_dict["duration"]["to"] = request.form["duration_to"]
+            params_dict["directed_by"] = request.form["directed_by"]
+            params_dict["number_of_votes"]["from"] = request.form["num_of_votes_from"]
+            params_dict["number_of_votes"]["to"] = request.form["num_of_votes_to"]
+            params_dict["rating"]["from"] = request.form["rating_from"]
+            params_dict["rating"]["to"] = request.form["rating_to"]
+            # movies = mdb.get_movie_by_param(param_cleaner(params_dict))
+
+    return render_template("random_generator.html", movies=[])
+
+
 @app.route("/", methods=["POST", "GET"])
 def main_page():
     if request.method == "POST":
@@ -192,11 +282,6 @@ def main_page():
     movies = movie_data['movies']
 
     return render_template("main_page.html", movies=movies, search_resoults=-1)
-
-
-@app.route("/random_generator", methods=["POST", "GET"])
-def random_generator():
-    return render_template("random_generator.html")
 
 
 if __name__ == "__main__":
