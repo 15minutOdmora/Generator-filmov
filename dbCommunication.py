@@ -123,15 +123,33 @@ class UserDataBase(Connector):
             password = user['password']
             email = user['email']
             phone = user['phoneNumber']
+            liked = user['liked']
+            watched = user['watched']
 
         self.close_cursor()
 
-        return True, {'idUser': id_user, 'username': username, 'password': password, 'email': email, 'phone': phone}
+        data = {'idUser': id_user,
+                'username': username,
+                'password': password,
+                'email': email,
+                'phone': phone,
+                'liked': liked,
+                'watched': watched}
+
+        return True, data
 
     def get_user_by_id(self, id):
         """ TODO
         Function checks if user exists, returns True and the users data in a dict.
         :return: Touple (True/False if user exists, {'userId': ,'username': ,'email': ,'phone': , 'liked': JSON, 'watched' JSON})
+        """
+        pass
+
+    def save_liked_wached_to_user(self, idUser, liked, watched):
+        """
+        Function saves liked and watched jsons to user in database
+        :param idUser: the id of the user
+        :return: True/False if successful
         """
         pass
 
