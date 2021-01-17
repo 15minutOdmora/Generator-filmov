@@ -179,12 +179,12 @@ def param_cleaner(param_dict):
     :return: param_dict_cleaned
     """
     def generate_number_from_type(type, to_from, value):
-        if value == 0:
+        if value == 0 or value == '':
             if type == 'release_year':
                 if to_from == 'from':
                     return 1900
                 elif to_from == 'to':
-                    return 2030
+                    return 2020
             if type == 'duration':
                 if to_from == 'from':
                     return 0
@@ -242,14 +242,17 @@ def random_generator():
             params_dict["number_of_votes"]["to"] = request.form["num_of_votes_to"]
             params_dict["rating"]["from"] = request.form["rating_from"]
             params_dict["rating"]["to"] = request.form["rating_to"]
+            if "select_genre" in request.form.keys():
+                params_dict["genre"] = request.form.getlist('select_genre')
+
             movies = mdb.get_movie_by_param(param_cleaner(params_dict))
+            print(param_cleaner(params_dict))
             return render_template("random_generator.html", movies=movies)
 
         # If Generate button was clicked
         if request.form.get("search_button", False) == 'generate':
             params_dict["release_year"]["from"] = request.form["release_year_from"]
             params_dict["release_year"]["to"] = request.form["release_year_to"]
-            # params_dict["genre"] = request.form["select_genre"]
             params_dict["duration"]["from"] = request.form["duration_from"]
             params_dict["duration"]["to"] = request.form["duration_to"]
             params_dict["directed_by"] = request.form["directed_by"]
@@ -257,7 +260,13 @@ def random_generator():
             params_dict["number_of_votes"]["to"] = request.form["num_of_votes_to"]
             params_dict["rating"]["from"] = request.form["rating_from"]
             params_dict["rating"]["to"] = request.form["rating_to"]
-            # movies = mdb.get_movie_by_param(param_cleaner(params_dict))
+            if "select_genre" in request.form.keys():
+                params_dict["genre"] = request.form.getlist('select_genre')
+
+            movies = mdb.get_movie_by_param(param_cleaner(params_dict), rand=True)
+            print(param_cleaner(params_dict))
+            print(movies)
+            return render_template("random_generator.html", movies=movies)
 
     return render_template("random_generator.html", movies=[])
 

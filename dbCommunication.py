@@ -457,7 +457,7 @@ class MovieDatabase(Connector):
 
         return movies_data
 
-    def get_movie_by_param(self, parameters):
+    def get_movie_by_param(self, parameters, rand=False):
         """ todo Function that returns movie/director data based on search inputs saved in dict param
             todo should add: If key not in param, user did not select that
         :param param: dict('release_year': dict('from': , 'to': ),
@@ -469,12 +469,47 @@ class MovieDatabase(Connector):
                 if from/to == -1, do all
         :return: the same
         """
+        print(rand)
+
         def get_all_movie_by_idstring(id_string):
             """Searches movies"""
             data = []
             # Create cursor
             self.create_cursor()
             code = "SELECT * FROM movie WHERE idMovie IN (" + id_string + ")"
+            self.execute(code, None)
+            print(self.cur)
+            for movie in self.cur:
+                idMovie = movie['idMovie']
+                title = movie['title']
+                isAdult = movie['isAdult']
+                releaseYear = movie['releaseYear']
+                runtimeMinutes = movie['runtimeMinutes']
+                rating = movie['rating']
+                numVotes = movie['numVotes']
+
+                """img_url = get_google_image_link(title + " " + str(releaseYear))
+                additional_data = get_movie_details(id)"""
+
+                movies_dict = {'idMovie': idMovie,
+                               'title': title,
+                               'isAdult': isAdult,
+                               'releaseYear': releaseYear,
+                               'runtimeMinutes': runtimeMinutes,
+                               'rating': rating,
+                               'numVotes': numVotes}
+                data.append(movies_dict)
+
+            print("data", data)
+            return data
+
+        def get_all_movie_by_idstring_rand(id_string):
+            """Searches movies"""
+            print("Malora")
+            data = []
+            # Create cursor
+            self.create_cursor()
+            code = "SELECT * FROM movie WHERE idMovie IN (" + id_string + ") ORDER BY RAND() LIMIT 3"
             self.execute(code, None)
             print(self.cur)
             for movie in self.cur:
@@ -583,7 +618,7 @@ class MovieDatabase(Connector):
             print("movie_ids", movie_ids)
             return movie_ids
 
-        def call(parameters):
+        def call(parameters, rand):
             """ calls stuff does stuff makes stuff we need """
             
             join_this = []
@@ -668,12 +703,15 @@ class MovieDatabase(Connector):
                 else:
                     string_of_ids = string_of_ids + ",'" + id + "'"
 
-            print(string_of_ids)
-            final_squad = get_all_movie_by_idstring(string_of_ids)
+            print(rand)
+            if rand:
+                final_squad = get_all_movie_by_idstring_rand(string_of_ids)
+            else:
+                final_squad = get_all_movie_by_idstring(string_of_ids)
                 
             return final_squad
       
-        return call(parameters)
+        return call(parameters, rand)
 
     def get_movie_by_param_randomized(self, param):
         """ todo Function that returns one movie based on param, randomized from all the movies that fit param measures
