@@ -464,27 +464,33 @@ class MovieDatabase(Connector):
         return movies_data
 
     def get_movie_by_param(self, parameters, rand=False):
-        """ todo Function that returns movie/director data based on search inputs saved in dict param
-            todo should add: If key not in param, user did not select that
-        :param param: dict('release_year': dict('from': , 'to': ),
+        """Function: Returns a movies list containing movie dicts
+        :parameters: dict('release_year': dict('from': , 'to': ),
                             'genre': str(),
                             'duration': dict('from': , 'to': ),
                             'directed_by': str(),
                             'number_of_votes': dict('from': , 'to': ),
                             'rating': dict('from': , 'to': ))
-                if from/to == -1, do all
-        :return: the same
+        :return: list[dict("movieId": , "title": , "year": , ...)]
         """
-        print(rand)
 
         def get_all_movie_by_idstring(id_string):
-            """Searches movies"""
+            """Function: Returns a movies list based on idMovie.
+            :parameters: str('idMovie1','idMovie2', ...)
+            :return: list[dict("movieId": , "title": , "year": , ...)]
+            """
+
+            # For saving movies
             data = []
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT * FROM movie WHERE idMovie IN (" + id_string + ")"
             self.execute(code, None)
-            print(self.cur)
+
+            # Saves all movies in a list
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 title = movie['title']
@@ -494,6 +500,7 @@ class MovieDatabase(Connector):
                 rating = movie['rating']
                 numVotes = movie['numVotes']
 
+                # Gets movie image
                 """img_url = get_google_image_link(title + " " + str(releaseYear))
                 additional_data = get_movie_details(id)"""
 
@@ -506,18 +513,25 @@ class MovieDatabase(Connector):
                                'numVotes': numVotes}
                 data.append(movies_dict)
 
-            print("data", data)
             return data
 
         def get_all_movie_by_idstring_rand(id_string):
-            """Searches movies"""
-            print("Malora")
+            """Function: Returns a 3 random movies list based on idMovie.
+            :parameters: str('idMovie1','idMovie2', ...)
+            :return: list[dict("movieId": , "title": , "year": , ...)]
+            """
+
+            # For saving movies
             data = []
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT * FROM movie WHERE idMovie IN (" + id_string + ") ORDER BY RAND() LIMIT 3"
             self.execute(code, None)
-            print(self.cur)
+
+            # Saves all movies in a list
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 title = movie['title']
@@ -539,168 +553,272 @@ class MovieDatabase(Connector):
                                'numVotes': numVotes}
                 data.append(movies_dict)
 
-            print("data", data)
             return data
-        
-        def get_all_movie_ids():
-            """Searches movies"""
 
-            # List to save the movie data in based on id, used for interjection
+        def get_all_movie_ids():
+            """Function: Returns idMovie for all movies in the database, is used for interjection
+            :parameters: None
+            :return: dict(idMovie1: None, ... )
+            """
+
+            # Dict to save the movie data in based on id, used for interjection / should use set()
             movies_ids_tmp = {}
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT idMovie FROM movie"
             param = (None)
             self.cur.execute(code, param)
 
-            # Save all of the data for movies
+            # Saves all idMovie for movies
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 movies_ids_tmp[idMovie] = None
 
-            # print("movie_ids_tmp", movies_ids_tmp)
-            print("Im here")
             return movies_ids_tmp
 
         def get_movieid_by_genre(genres_str):
-            '''Searches movies by genres'''
+            """Function: Returns idMovie for all movies in selected genres
+            :parameters: str('Romance','Horror',...)
+            :return: dict(idMovie1: None, ... )
+            """
 
-            # List to save the movie data in based on id, used for interjection
+            # Dict to save the movie data in based on id, used for interjection / should use set()
             genre_movies_ids_tmp = {}
+
             # Create cursor
             self.create_cursor()
-            code = "SELECT movie.idMovie FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName IN ("+ genres_str + ")"
+
+            # SQL code
+            code = "SELECT movie.idMovie FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName IN (" + genres_str + ")"
             self.cur.execute(code, None)
 
-            # Save all of the data for movies
+            # Saves all idMovie for movies
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 genre_movies_ids_tmp[idMovie] = None
 
-            print("genre_movies_ids_tmp", genre_movies_ids_tmp)
             return genre_movies_ids_tmp
-        
-        def get_movieid_by_director(name):
-            '''Searches movies by director'''
 
-            # List to save the movie data in based on id, used for interjection
+        def get_movieid_by_director(name):
+            """Function: Returns idMovie for all movies directed by a one person
+            :parameters: Directors name
+            :return: dict(idMovie1: None, ... )
+            """
+
+            # Dict to save the movie data in based on id, used for interjection / should use set()
             director_movies_ids_tmp = {}
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT movie.* FROM movie JOIN team ON team.idMovie = movie.idMovie JOIN writersanddirectors ON team.idWritersAndDirectors = writersanddirectors.idWritersAndDirectors WHERE writersanddirectors.name = %s"
             param = (name,)
             self.cur.execute(code, param)
 
-            # Save all of the data for movies
+            # Saves all idMovie for movies
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 director_movies_ids_tmp[idMovie] = None
 
-            print("director_movies_ids_tmp", director_movies_ids_tmp)
             return director_movies_ids_tmp
 
         def get_movieid_by_all_else(code, param):
-            
+            """Function: Returns idMovie for all movies fitting from,to parameters
+            :parameters: code = str(SQL code), param = tuple(int('from this year'),int('to this year'),...)
+            :return: dict(idMovie1: None, ... )
+            """
+
+            # Dict to save the movie data in based on id, used for interjection / should use set()
             other_movies_ids_tmp = {}
+
             # Create cursor
             self.create_cursor()
+
+            # Executes cursor, code is provided in params
             self.cur.execute(code, param)
 
-            # Save all of the data for movies
+            # Saves all idMovie for movies
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 other_movies_ids_tmp[idMovie] = None
 
-            print("other_movies_ids_tmp", other_movies_ids_tmp)
             return other_movies_ids_tmp
 
-        def join_all_return_ids(directors_ids,genres_ids,other_ids):
+        def join_all_return_ids(directors_ids, genres_ids, other_ids):
+            """Function: Returns a list of idMovie for searched parameters
+            :parameters: directors_ids is a dictionary of idMovie for director searched
+                            genres_ids is a dictionary of idMovie for genres searched
+                            other_ids is a dictionary of idMovie for other parameters
+            :return: list(idMovie1,...)
+            """
 
+            # List to save all final parsed idMovie
             movie_ids = []
+
+            # Makes an intersection
             common_ids = directors_ids.keys() & genres_ids.keys() & other_ids.keys()
+
+            # Saves all idMovie in a list
             for id in common_ids:
                 movie_ids.append(id)
 
-            print("movie_ids", movie_ids)
             return movie_ids
 
         def call(parameters, rand):
-            """ calls stuff does stuff makes stuff we need """
-            
+            """Function: calls stuff does stuff makes stuff we need
+            :parameters: parameters = dict('release_year': dict('from': , 'to': ),
+                            'genre': str(),
+                            'duration': dict('from': , 'to': ),
+                            'directed_by': str(),
+                            'number_of_votes': dict('from': , 'to': ),
+                            'rating': dict('from': , 'to': ))
+                        rand = True/False
+            :return: list[dict("movieId": , "title": , "year": , ...)]
+            """
+
+            # List for saving all dicts with idMovie
             join_this = []
+
+            # SQL code used for searching movies based on integer parameters
             code = 'SELECT idMovie FROM movie WHERE'
+
+            # Saves from and to parameters
             param = []
+
+            # Check if any integer parameters were given
             i_did_it = False
+
+            # Saves idMovie for all parameters, will be used for intersection
             other_ids = {}
             genres_ids = {}
             directors_ids = {}
+
+            # Prepares code if release year parameter was given
             if 'release_year' in parameters.keys():
+
+                # Adds a condition line to the SQL code
                 code += ' releaseYear > %s AND releaseYear < %s AND'
+
+                # Saves parameters
                 param.append(parameters['release_year']['from'])
                 param.append(parameters['release_year']['to'])
+
+                # Integer parameters were given
                 i_did_it = True
 
+            # Prepares code if duration parameter was given
             if 'duration' in parameters.keys():
+
+                # Adds a condition line to the SQL code
                 code += ' runtimeMinutes > %s AND runtimeMinutes < %s AND'
+
+                # Saves parameters
                 param.append(parameters['duration']['from'])
                 param.append(parameters['duration']['to'])
+
+                # Integer parameters were given
                 i_did_it = True
 
+            # Prepares code if number of votes parameter was given
             if 'number_of_votes' in parameters.keys():
+
+                # Adds a condition line to the SQL code
                 code += ' numVotes > %s AND numVotes < %s AND'
+
+                # Saves parameters
                 param.append(parameters['number_of_votes']['from'])
                 param.append(parameters['number_of_votes']['to'])
+
+                # Integer parameters were given
                 i_did_it = True
-                
+
+            # Prepares code if rating parameter was given
             if 'rating' in parameters.keys():
+
+                # Adds a condition line to the SQL code
                 code += ' rating > %s AND rating < %s AND'
+
+                # Saves parameters
                 param.append(parameters['rating']['from'])
                 param.append(parameters['rating']['to'])
+
+                # Integer parameters were given
                 i_did_it = True
-                
+
+            # If integer parameters were given, finds all idMovie for those
             if i_did_it:
+
+                # Adds 1 to the end of code
+                # Code end now looks like:  SELECT ... WHERE case1 AND case2 ... AND 1
                 code += ' 1'
+
+                # Saves all idMovie for integer parameters
                 other_ids = get_movieid_by_all_else(code, tuple(param))
+
+                # If none were found -> no movie fits the parameters given
                 if other_ids == {}:
                     return {}
-                
+
+            # If genre parameters is geven, finds all idMovie for those
             if 'genre' in parameters.keys():
+
+                # Saves string for genres, will be SQL parameter
                 genre_str = ''
+
                 i = 0
+                # Creates genre string used for code, string described in function parameters
                 for some_genre in parameters['genre']:
                     if i == 0:
                         genre_str += "'" + some_genre + "'"
                         i = 1
                     else:
-                        genre_str = genre_str + ",'" + some_genre + "'"  
+                        genre_str = genre_str + ",'" + some_genre + "'"
+
+                # Saves all idMovie for given genres
                 genres_ids = get_movieid_by_genre(genre_str)
-                
+
+                # If none were found -> no movie fits the parameters given
                 if genres_ids == {}:
                     return {}
-                
+            # If director parameter is geven, finds all idMovie for those
             if 'directed_by' in parameters.keys():
+
+                # Saves all idMovie for given genres
                 directors_ids = get_movieid_by_director(parameters['directed_by'])
+
+                # If none were found -> no movie fits the parameters given
                 if directors_ids == {}:
                     return {}
-                
+
+            # Checks if user didnt select some parameters
             join_this.append(other_ids)
             join_this.append(directors_ids)
             join_this.append(genres_ids)
-
             if {} in join_this:
+
+                # Saves all movie ids, runs only if user did not specify some parameters
                 all_ids = get_all_movie_ids()
-                
-            if directors_ids == {}:
-                directors_ids = all_ids
-                
-            if genres_ids == {}:
-                genres_ids = all_ids
-                
-            if other_ids == {}:
-                other_ids = all_ids
-                
+
+                # Fills empty dicts with idMovie for all movies
+                # used for intersection
+                if directors_ids == {}:
+                    directors_ids = all_ids
+                if genres_ids == {}:
+                    genres_ids = all_ids
+                if other_ids == {}:
+                    other_ids = all_ids
+
+            # Saves joined idMovie
             mov_ids = join_all_return_ids(directors_ids, genres_ids, other_ids)
+
+            # Saves string for the ids, used for SQL code
             string_of_ids = ''
+
+            # Creates string for ids, used for SQL code
             i = 0
             for id in mov_ids:
                 if i == 0:
@@ -709,15 +827,19 @@ class MovieDatabase(Connector):
                 else:
                     string_of_ids = string_of_ids + ",'" + id + "'"
 
-            print(rand)
+            # If random is True, saves random movies based on parameters,
+            # otherwise, save all movies based on parameters.
             if rand:
                 final_squad = get_all_movie_by_idstring_rand(string_of_ids)
             else:
                 final_squad = get_all_movie_by_idstring(string_of_ids)
-                
+
+            # Returns a movies dict
             return final_squad
-      
+
+        # Return the call
         return call(parameters, rand)
+
 
     def get_movie_by_param_randomized(self, param):
         """ todo Function that returns one movie based on param, randomized from all the movies that fit param measures
