@@ -106,7 +106,7 @@ class UserDataBase(Connector):
             param = (username)
             self.cur.execute(code, param)
 
-            # If any user returned, returns false
+            # If any user found, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
@@ -127,7 +127,7 @@ class UserDataBase(Connector):
             param = (email)
             self.cur.execute(code, param)
 
-            # If any email returned, returns false
+            # If any email found, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
@@ -148,7 +148,7 @@ class UserDataBase(Connector):
             param = (phone)
             self.cur.execute(code, param)
 
-            # If any email returned, returns false
+            # If any email found, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
@@ -225,18 +225,20 @@ class UserDataBase(Connector):
         return True, data
 
     def get_user_by_id(self, id):
-        """ TODO
-        Function checks if user exists, returns True and the users data in a dict.
+        """Function checks if user exists, returns True and the users data in a dict.
         :return: Touple (True/False if user exists, {'userId': ,'username': ,'email': ,'phone': , 'liked': JSON, 'watched' JSON})
         """
+        
         # Create cursor
         self.create_cursor()
 
-        # Search in database
+        # SQL code
         code = "SELECT * FROM user WHERE idUser = %s"
         param = (id,)
         self.cur.execute(code, param)
+        
         # Should only be one username in database
+        # Saves user in a dict
         for user in self.cur:
             id_user = user['idUser']
             username = user['username']
@@ -349,26 +351,23 @@ class UserDataBase(Connector):
 class MovieDatabase(Connector):
 
     def search_by_keyword(self, keyword):
-        """ ONLY MOVIE NAMES
-        Function gets a keyword that was typed in the search box, returns all the results.
-        Search by keyword on main page(could be actor, movie, genre...)
+        """Function gets a keyword that was typed in the search box, returns all the results.
+        Search by keyword on main page
         :param keyword: string
-        :return: int(number_of_matches), dict("movies": sorted(list[dict("movieId": , "title": , "year": , ...)]),
-                                              "directors": sorted(list[dict("actorId": , "age": , ...))])
-        List should be sorted decreasing by number of votes for movies, decreasing by number of roles for actor
+        :return: int(number_of_matches), sorted(list[dict("movieId": , "title": , "year": , ...)]),
         """
-        # we only have directors / writers
-        # Finished, check returns and comments
-
+        
         # Lists for saving data
         movies_data = []
         writers_and_directors_data = []
+        
         # Add % for keyword search
         keyword = '%' + keyword + '%'
-        # Create cursor for movies
+        
+        # Create cursor
         self.create_cursor()
 
-        # Search in movie database
+        # SQL code
         code = "SELECT * FROM movie WHERE title LIKE %s ORDER BY (numVotes) DESC"
         param = (keyword,)
         self.cur.execute(code, param)
@@ -403,16 +402,17 @@ class MovieDatabase(Connector):
 
     def random_new_movies(self):
         """
-        Function returns a dict containing a sorted list of 5 random new-er movies.
+        Function returns a dict containing a list of 5 random movies.
         :return: dict("movies": sorted(list["movieId": , ...]))
-        Newer movies have a higher chance of being selected, so the random returned dict should be mostly movies
-        made between 2010 - 2020, with a small chance of older movies. //
-        Sorted by number of votes.
         """
+        
         # List to save the movie data in
         movies_data = []
+        
         # Create cursor
         self.create_cursor()
+
+        # SQL code
         code = "SELECT * FROM movie ORDER BY RAND() LIMIT 5"
         self.cur.execute(code)
 
@@ -434,33 +434,45 @@ class MovieDatabase(Connector):
         return {"movies": movies_data}
 
     def search_movie_by_id(self, id):
-        """ TODO add genres of movie
-        Function: Returns a movies list containing movie dicts. of the id
+        """Function: Returns a movies list containing movie dicts, also has genres
         :param id: idMovie
         :return: list[dict('idMovie': , 'title': , ...)]
         """
+        
         def search_all_genres_for_movie(mov_id):
-            genres_data = []
-            self.create_cursor()
+            """Function: Returns a genre list for movie id
+            :param id: idMovie
+            :return: list[dict('idMovie': , 'title': , ...)]
+            """
 
-            
+            # Saves all genres
+            genres_data = []
+
+            # Creates cursor
+            self.create_cursor()
+    
+            # SQL code
             code = "SELECT genreName FROM Genre JOIN Genre ON Genre.idGenre = GenresByMovie.idGenre JOIN GenresByMovie ON Movie.idMovie = GenresByMovie.idMovie  WHERE Movie.title = %s"
             param = (mov_id,)
             self.cur.execute(code, param)
+
+            # Saves genres
             for genre in self.cur:
                 genres_data.append(genre['genreName'])
+                
             return genres_data
             
-        # List to save the movie data in
+        # List to save the movie data in, should only be one
         movies_data = []
+        
         # Create cursor
         self.create_cursor()
-        # TODO add genre
+        # SQL code
         code = "SELECT * FROM movie WHERE idMovie = %s"
         param = (id,)
         self.cur.execute(code, param)
 
-        # Save all of the data for movies
+        # Save all of the data for movies, should only be one
         for movie in self.cur:
             idMovie = movie['idMovie']
             title = movie['title']
@@ -469,8 +481,8 @@ class MovieDatabase(Connector):
             runtimeMinutes = movie['runtimeMinutes']
             rating = movie['rating']
             numVotes = movie['numVotes']
-            # todo add genre
 
+            genre = search_all_genres_for_movie(idMovie)
             img_url = get_google_image_link(title + " " + str(releaseYear))
             additional_data = get_movie_details(id)
 
@@ -482,8 +494,8 @@ class MovieDatabase(Connector):
                            'rating': rating,
                            'numVotes': numVotes,
                            'img_url': img_url,
-                           'description': additional_data['description']}
-                           'genre': search_all_genres_for_movie(idMovie)
+                           'description': additional_data['description'],
+                           'genre': genre}
             movies_data.append(movies_dict)
 
         return movies_data
@@ -866,37 +878,26 @@ class MovieDatabase(Connector):
         return call(parameters, rand)
 
 
-    def get_movie_by_param_randomized(self, param):
-        """ todo Function that returns one movie based on param, randomized from all the movies that fit param measures
-            todo call get_movie_by_param(self, param):
-            todo should add: If key not in param, user did not select that
-        :param param: dict('release_year': dict('from': , 'to': ),
-                            'genre': str(),
-                            'duration': dict('from': , 'to': ),
-                            'directed_by': str(),
-                            'number_of_votes': dict('from': , 'to': ),
-                            'rating': dict('from': , 'to': ))
-                if from/to == -1, do all
-        :return: the same
-        """
-        pass
-
     def search_movie_by_multiple_ids(self, id_list):
         """
         Function: Returns a movies list containing movie dicts. of the ids in the id_list
         :param id: list containing movie ids
         :return: list[dict('idMovie': , 'title': , ...)]
         """
+        
         # List to save the movie data in
         movies_data = []
+
+        # For each id
         for id in id_list:
+            
             # Create cursor
             self.create_cursor()
             code = "SELECT * FROM movie WHERE idMovie = %s"
             param = (id,)
             self.cur.execute(code, param)
 
-            # Save all of the data for movies
+            # Save all of the data for movies, one at a time
             for movie in self.cur:
                 idMovie = movie['idMovie']
                 title = movie['title']
@@ -920,7 +921,7 @@ class MovieDatabase(Connector):
                                'description': additional_data['description']}
                 movies_data.append(movies_dict)
 
-            return movies_data
+        return movies_data
         
 
 if __name__ == "__main__":
