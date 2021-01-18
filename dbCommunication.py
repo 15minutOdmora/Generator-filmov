@@ -305,7 +305,7 @@ class UserDataBase(Connector):
         except:
             return False
 
-    def save_opinion_of_movie(self, username, idMovie, opinion):
+    def save_opinion_of_movie(self, username, idMovie, opinion, rate):
         """
         Function saves given opinion about the movie to the user opinion table
         :param username: users username
@@ -314,12 +314,13 @@ class UserDataBase(Connector):
         :return: True/False if successful
         """
         try:
+            ver, user = self.get_user_by_username(username)
             # Create cursor
             self.create_cursor()
-            code = "INSERT INTO opinion(idUser, idMovie, opinion) VALUES (%s, %s, %s )"
-            param = (self.get_user_by_username(username)[1]['idUser'], idMovie, opinion)
+            code = "INSERT INTO opinion(idUser, idMovie, opinion, ocena) VALUES (%s, %s, %s, %s)"
+            param = (user['idUser'], idMovie, opinion, rate)
             # Execute the code
-            self.cur.execute(code, param)
+            self.execute(code, param)
             # Commit to database
             self.commit()
             # Close cursor
@@ -335,17 +336,21 @@ class UserDataBase(Connector):
         :return: {'literally id of movie': 'opinion', 'ex. tt123456': 'I very liked this movie', ...}
         """
         data = {}
+        data2 = {}
         self.create_cursor()
-        code = "SELECT opinion.idMovie,opinion.opinion FROM opinion JOIN user ON opinion.idUser = user.idUser WHERE user.username = %s"
+        code = "SELECT opinion.idMovie,opinion.opinion, opinion.ocena FROM opinion JOIN user ON opinion.idUser = user.idUser WHERE user.username = %s"
         param = (username,)
         # Execute the code
         self.cur.execute(code, param)
 
         for opinion in self.cur:
+            print(opinion)
             data[opinion['idMovie']] = opinion['opinion']
+            data2[opinion['idMovie']] = opinion['ocena']
                     
         self.close_cursor()
-        return data
+        print(data)
+        return data, data2
 
 
 class MovieDatabase(Connector):
@@ -397,8 +402,6 @@ class MovieDatabase(Connector):
         number_of_matches = len(movies_data)
 
         return number_of_matches, movies_data
-
-
 
     def random_new_movies(self):
         """
@@ -452,7 +455,7 @@ class MovieDatabase(Connector):
             self.create_cursor()
     
             # SQL code
-            code = "SELECT genreName FROM Genre JOIN Genre ON Genre.idGenre = GenresByMovie.idGenre JOIN GenresByMovie ON Movie.idMovie = GenresByMovie.idMovie  WHERE Movie.title = %s"
+            code = "SELECT genreName FROM Genre JOIN GenresByMovie ON Genre.idGenre = GenresByMovie.idGenre JOIN GenresByMovie ON Movie.idMovie = GenresByMovie.idMovie  WHERE Movie.title = %s"
             param = (mov_id,)
             self.cur.execute(code, param)
 
@@ -482,7 +485,7 @@ class MovieDatabase(Connector):
             rating = movie['rating']
             numVotes = movie['numVotes']
 
-            genre = search_all_genres_for_movie(idMovie)
+            # genre = search_all_genres_for_movie(idMovie)
             img_url = get_google_image_link(title + " " + str(releaseYear))
             additional_data = get_movie_details(id)
 
@@ -494,8 +497,8 @@ class MovieDatabase(Connector):
                            'rating': rating,
                            'numVotes': numVotes,
                            'img_url': img_url,
-                           'description': additional_data['description'],
-                           'genre': genre}
+                           'description': additional_data['description']}
+                          #  'genre': genre}
             movies_data.append(movies_dict)
 
         return movies_data
@@ -927,12 +930,14 @@ class MovieDatabase(Connector):
 if __name__ == "__main__":
     # For testing
     mdb = MovieDatabase()
+    udb = UserDataBase()
+    opinion = udb.get_all_opinions_of_user("test3")
     """print(mdb.random_new_movies())"""
-    param = {'release_year': {'from': 1990, 'to': 2020},
+    """param = {'release_year': {'from': 1990, 'to': 2020},
              'genre': 'Romance',
              'duration': {'from': 60, 'to': 120},
              'directed_by': "0",
              'number_of_votes': {'from': 200, 'to': 10000},
              'rating': {'from': 8, 'to': 10}}
-    print(mdb.get_movie_by_param(param))
+    print(mdb.get_movie_by_param(param))"""
     pass

@@ -9,7 +9,7 @@
 <div class="container emp-profile">
             <form method="post">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div>
                             <img src="{{ movie.img_url }}" alt="" width="150px" height="250px"/>
                         </div>
@@ -33,9 +33,55 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         {% if session.logged_in %}
                         <div class="input-group">
+                            {% if movie.idMovie in session.user.watched.keys() %}
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Opinion
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Add opinion</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <div class="row">
+                                              <div class="col-sm-1">
+                                              </div>
+                                              <div class="col-md-8">
+                                                {% if 'opinion' in movie.keys() %}
+                                                <label for="Textarea1" style="padding-left: 10px;">Write your opinion here</label>
+                                                <textarea name="opinion" class="form-control" id="Textarea1" rows="5" style="padding-left: 10px; padding-right: 10px;">{{ movie.opinion }}</textarea>
+                                                {% else %}
+                                                <label for="Textarea2" style="padding-left: 10px;">Write your opinion here</label>
+                                                <textarea name="opinion" class="form-control" id="Textarea2" rows="5" style="padding-left: 10px; padding-right: 10px;"></textarea>
+                                                {% endif %}
+                                              </div>
+                                              <div class="col-sm-1">
+                                                {% if 'opinion' in movie.keys() %}
+                                                  <label for="grade1">Rate(1-10)</label>
+                                                  <input name="rate" id="grade1" type="number" width="5" min="1" max="10" value="{{ movie.opinion_rating }}">
+                                                {% else %}
+                                                  <label for="grade2">Rate(1-10)</label>
+                                                  <input name="rate" id="grade2" type="number" width="5" min="1" max="10">
+                                                {% endif %}
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" name="save_button" value="save_opinion" class="btn btn-primary">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            {% endif %}
                             {% if movie.idMovie in session.user.liked %}
                                 <button type="submit" name="save_button" value="unliked {{ movie.idMovie }}" class="btn btn-outline-danger active">Liked</button>
                             {% else %}
@@ -53,7 +99,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                     </div>
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">

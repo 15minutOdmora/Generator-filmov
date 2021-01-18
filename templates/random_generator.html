@@ -1,10 +1,5 @@
 {% extends "base.html" %}
 {% block link %}
-<script>
-function updateTextInput(val) {
-          document.getElementById('textInput').value=val;
-        }
-</script>
 {% endblock %}
 
 {% block title %}Random Generator{% endblock %}
@@ -16,7 +11,7 @@ function updateTextInput(val) {
     <div class="container-xl" style="padding-bottom: 50px; height: 100px;">
         <div class="row">
             <div class="col-sm-10">
-                <label>Search movies by typing in the title, if you wish to search authors and directors type a: or d: before the name.</label>
+                <label></label>
             </div>
         </div>
         <div class="row">
@@ -46,7 +41,7 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input name="release_year_from" type="number" class="form-control" placeholder="1915">
+            <input name="release_year_from" type="number" class="form-control" placeholder="1904">
         </div>
         <div class="col-sm-2">
             <label> to</label>
@@ -87,15 +82,15 @@ function updateTextInput(val) {
     </div>
     <div class="row bg-light" style="padding-top: 40px;">
         <div class="col-sm-2">
-            <label style="padding-top: 25px; font-size: 20px;">Duration: </label>
+            <label style="padding-top: 28px; font-size: 20px;">Duration(minutes):</label>
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input name="duration_from" type="number" class="form-control" placeholder="1915">
+            <input name="duration_from" type="number" class="form-control" placeholder="15">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input name="duration_to" type="number" class="form-control" placeholder="2020">
+            <input name="duration_to" type="number" class="form-control" placeholder="5020">
         </div>
         <div class="col-sm-4">
             <label style="font-size: 23px;">Directed by: </label>
@@ -108,11 +103,11 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input name="num_of_votes_from" type="number" class="form-control" placeholder="1915">
+            <input name="num_of_votes_from" type="number" class="form-control" placeholder="100">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input name="num_of_votes_to" type="number" class="form-control" placeholder="2020">
+            <input name="num_of_votes_to" type="number" class="form-control" placeholder="2307598">
         </div>
     </div>
 
@@ -122,11 +117,11 @@ function updateTextInput(val) {
         </div>
         <div class="col-sm-2">
             <label>From</label>
-            <input name="rating_from" type="number" class="form-control" placeholder="1915">
+            <input name="rating_from" type="number" class="form-control" placeholder="1">
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input name="rating_to" type="number" class="form-control" placeholder="2020">
+            <input name="rating_to" type="number" class="form-control" placeholder="10">
         </div>
     </div>
 

@@ -129,7 +129,6 @@ def register():
 
 @app.route("/movie/<id>", methods=["POST", "GET"])
 def movie(id):
-    # todo Watched for some reason isn't working
     if request.method == "POST":
         if request.form["save_button"].split(" ")[0] == "liked":
             # Add to session liked
@@ -152,7 +151,20 @@ def movie(id):
                 ver = udb.save_watched_to_user(session['user']['username'], session['user']['watched'])
                 print(ver)
 
+        if request.form["save_button"] == "save_opinion":
+            opinion = request.form["opinion"]
+            rate = request.form["rate"]
+            ver = udb.save_opinion_of_movie(session['user']['username'], id, opinion, int(rate))
+            print(ver)
+
     movie_data = mdb.search_movie_by_id(id)[0]
+
+    if session["logged_in"]:
+        opinion, opinion_rating = udb.get_all_opinions_of_user(session['user']['username'])
+        # Save opinion in movie_data
+        if id in opinion.keys():
+            movie_data['opinion'] = opinion[id]
+            movie_data['opinion_rating'] = opinion_rating[id]
     return render_template("movie_page.html", movie=movie_data)
 
 
@@ -160,14 +172,21 @@ def movie(id):
 def user_profile(username):
     is_in_database, user_data = udb.get_user_by_username(username)
     if is_in_database:
+        # Get all opinions
+        opinions, ratings = udb.get_all_opinions_of_user(username)
         # Get liked and watched movies data
         liked_movies = []
         for key, value in user_data['liked'].items():
             liked_movies.append(mdb.search_movie_by_id(key)[0])
         watched_movies = []
         for key, value in user_data['watched'].items():
-            watched_movies.append(mdb.search_movie_by_id(key)[0])
-        return render_template("user_profile.html", user_data=user_data, liked=liked_movies, watched=watched_movies)
+            searched_movie = mdb.search_movie_by_id(key)[0]
+            # Shitty solution
+            if key in opinions.keys():
+                searched_movie['opinion'] = opinions[key]
+                searched_movie['opinion_rating'] = ratings[key]
+            watched_movies.append(searched_movie)
+        return render_template("user_profile.html", user_data=user_data, liked=liked_movies, watched=watched_movies, opinions=opinions)
     else:
         return render_template("<h2>This user does not exist</h2>")
 
@@ -264,8 +283,6 @@ def random_generator():
                 params_dict["genre"] = request.form.getlist('select_genre')
 
             movies = mdb.get_movie_by_param(param_cleaner(params_dict), rand=True)
-            print(param_cleaner(params_dict))
-            print(movies)
             return render_template("random_generator.html", movies=movies)
 
     return render_template("random_generator.html", movies=[])

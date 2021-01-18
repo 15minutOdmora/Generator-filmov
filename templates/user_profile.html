@@ -35,10 +35,10 @@
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                         <div class="row" style="padding-top: 15px;">
                                             <div class="col-md-6">
-                                                <label>Total liked movies</label>
+                                                <label>{{ liked|length }} liked movies</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Number of movies.</p>
+                                                <p></p>
                                             </div>
                                         </div>
                                             <ul class="list-unstyled">
@@ -82,10 +82,10 @@
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div class="row" style="padding-top: 15px;">
                                             <div class="col-md-6">
-                                                <label>Total liked movies</label>
+                                                <label>{{ watched|length }} watched movies</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Number of movies.</p>
+                                                <p>.</p>
                                             </div>
                                 </div>
                                 <ul class="list-unstyled">
@@ -102,6 +102,12 @@
                                                                 <p> Child safe: No</p>
                                                              {% else %}
                                                                 <p> Child safe: Yes</p>
+                                                             {% endif %}
+                                                             {% if movie.idMovie in opinions %}
+                                                                <p><b>My rating:</b> {{ movie.opinion_rating }}</p>
+                                                                <b>My opinion:</b>
+                                                                {% set opinionId = movie.idMovie %}
+                                                                <p>{{ movie.opinion}}</p>
                                                              {% endif %}
                                                              {% if session.logged_in %}
                                                                  <div class="row float-right">
