@@ -84,66 +84,91 @@ class UserDataBase(Connector):
 
         # Close cursor
         self.close_cursor()
-
+        
     def check_user_registration_params(self, username='', email='', phone=''):
-        """ Todo
-        Function checks if username, email, phone are already in the user table
+        """Method checks if username, email, phone are already in the user table
         :param username: users username
         :param email: users email
         :param phone: users phone
         :return: True/False, working/if problem -> where
         """
+
         def username():
-            
+            """Function checks if username is already in the user table
+            :return: True/False
+            """
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT idUser FROM User WHERE username = %s"
             param = (username)
             self.cur.execute(code, param)
+
+            # If any user returned, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
-            
+
             self.close_cursor()
             return True
-        
+
         def email():
-            
+            """Function checks if email is already in the user table
+            :return: True/False
+            """
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT idUser FROM User WHERE email = %s"
             param = (email)
             self.cur.execute(code, param)
+
+            # If any email returned, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
-            
+
             self.close_cursor()
             return True
-        
+
         def phone():
-            
+            """Function checks if phone is already in the user table
+            :return: True/False
+            """
+
             # Create cursor
             self.create_cursor()
+
+            # SQL code
             code = "SELECT idUser FROM User WHERE phoneNumber = %s"
             param = (phone)
             self.cur.execute(code, param)
+
+            # If any email returned, returns false
             for user in self.cur:
                 self.close_cursor()
                 return False
-            
+
             self.close_cursor()
             return True
-        
+
+        # If faulty username
         if not username():
             return False, 'username'
-        
+
+        # If faulty email
         if not email():
             return False, 'email'
 
+        # If faulty phone
         if not phone():
             return False, 'phone'
 
+        # If working
         return True, 'working'
 
     def delete_existing_user(self, id):
