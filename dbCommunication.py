@@ -52,7 +52,7 @@ class Connector:
 class UserDataBase(Connector):
 
     def add_new_user(self, username, password, email=None, phone=None):
-        """ Todo call the function below
+        """
         Method: Adds new user into db in the table Uporabnik
         :param username: The username of the user
         :param password: Password of the user
@@ -86,12 +86,13 @@ class UserDataBase(Connector):
         self.close_cursor()
         
     def check_user_registration_params(self, username='', email='', phone=''):
-        """Method checks if username, email, phone are already in the user table
+        """ Method checks if username, email, phone are already in the user table
         :param username: users username
         :param email: users email
         :param phone: users phone
         :return: True/False, working/if problem -> where
         """
+        print(username, email)
 
         def username():
             """Function checks if username is already in the user table
@@ -103,8 +104,8 @@ class UserDataBase(Connector):
 
             # SQL code
             code = "SELECT idUser FROM User WHERE username = %s"
-            param = (username)
-            self.cur.execute(code, param)
+            param = (username,)
+            self.execute(code, param)
 
             # If any user found, returns false
             for user in self.cur:
@@ -124,7 +125,7 @@ class UserDataBase(Connector):
 
             # SQL code
             code = "SELECT idUser FROM User WHERE email = %s"
-            param = (email)
+            param = (email,)
             self.cur.execute(code, param)
 
             # If any email found, returns false
@@ -145,7 +146,7 @@ class UserDataBase(Connector):
 
             # SQL code
             code = "SELECT idUser FROM User WHERE phoneNumber = %s"
-            param = (phone)
+            param = (phone,)
             self.cur.execute(code, param)
 
             # If any email found, returns false
@@ -157,12 +158,13 @@ class UserDataBase(Connector):
             return True
 
         # If faulty username
-        if not username():
+        usr = username()
+        if not usr:
             return False, 'username'
 
         # If faulty email
         if not email():
-            return False, 'email'
+            return False, 'Email'
 
         # If faulty phone
         if not phone():
@@ -174,7 +176,7 @@ class UserDataBase(Connector):
     def delete_existing_user(self, id):
         """
         Method: Deletes existing user with the given id.
-        :param id: idUporabnik
+        :param id: idUser
         :return: True/False if successful or not.
         """
         # Create cursor
@@ -196,6 +198,8 @@ class UserDataBase(Connector):
         Function checks if user exists, returns True and the users data in a dict.
         :return: Touple (True/False if user exists, {'userId': ,'username': ,'password': ,'email': ,'phone': })
         """
+        data = {}
+
         # Create cursor
         self.create_cursor()
 
@@ -212,21 +216,24 @@ class UserDataBase(Connector):
             liked = json.loads(user['liked'])
             watched = json.loads(user['watched'])
 
+            data = {'idUser': id_user,
+                    'username': username,
+                    'password': password,
+                    'email': email,
+                    'phone': phone,
+                    'liked': liked,
+                    'watched': watched}
+
         self.close_cursor()
-
-        data = {'idUser': id_user,
-                'username': username,
-                'password': password,
-                'email': email,
-                'phone': phone,
-                'liked': liked,
-                'watched': watched}
-
-        return True, data
+        if data == {}:
+            return False, data
+        else:
+            return True, data
 
     def get_user_by_id(self, id):
         """Function checks if user exists, returns True and the users data in a dict.
-        :return: Touple (True/False if user exists, {'userId': ,'username': ,'email': ,'phone': , 'liked': JSON, 'watched' JSON})
+        :return: Touple (True/False if user exists,
+                        {'userId': ,'username': ,'email': ,'phone': , 'liked': JSON, 'watched' JSON})
         """
         
         # Create cursor
@@ -263,6 +270,7 @@ class UserDataBase(Connector):
         """
         Function saves liked and watched jsons to user in database
         :param username: the id of the user
+        :param watched: dict of watched movies
         :return: True/False if successful
         """
         # Create cursor
@@ -286,6 +294,7 @@ class UserDataBase(Connector):
         """
         Function saves liked and watched jsons to user in database
         :param username: the id of the user
+        :param liked: dict of liked movies
         :return: True/False if successful
         """
         # Create cursor
@@ -315,9 +324,7 @@ class UserDataBase(Connector):
         """
         try:
             opinion_check, rating_check = self.get_all_opinions_of_user(username)
-            print(opinion_check, rating_check)
             if idMovie not in rating_check.keys():
-                print("do sm pride")
                 ver, user = self.get_user_by_username(username)
                 # Create cursor
                 self.create_cursor()
@@ -360,12 +367,10 @@ class UserDataBase(Connector):
         self.cur.execute(code, param)
 
         for opinion in self.cur:
-            print(opinion)
             data[opinion['idMovie']] = opinion['opinion']
             data2[opinion['idMovie']] = opinion['ocena']
                     
         self.close_cursor()
-        print(data)
         return data, data2
 
 
@@ -446,7 +451,14 @@ class MovieDatabase(Connector):
             numVotes = movie['numVotes']
 
             img_url = get_google_image_link(title + " " + str(releaseYear))
-            movies_dict = {'idMovie': idMovie, 'title': title, 'isAdult': isAdult, 'releaseYear': releaseYear, 'runtimeMinutes': runtimeMinutes, 'rating': rating, 'numVotes': numVotes, 'img_url': img_url}
+            movies_dict = {'idMovie': idMovie,
+                           'title': title,
+                           'isAdult': isAdult,
+                           'releaseYear': releaseYear,
+                           'runtimeMinutes': runtimeMinutes,
+                           'rating': rating,
+                           'numVotes': numVotes,
+                           'img_url': img_url}
             movies_data.append(movies_dict)
 
         self.close_cursor()
@@ -471,7 +483,8 @@ class MovieDatabase(Connector):
             self.create_cursor()
     
             # SQL code
-            code = "SELECT genreName FROM Genre JOIN GenresByMovie ON Genre.idGenre = GenresByMovie.idGenre JOIN Movie ON Movie.idMovie = GenresByMovie.idMovie WHERE Movie.idMovie = %s"
+            code = "SELECT genreName FROM Genre JOIN GenresByMovie ON Genre.idGenre = GenresByMovie.idGenre " \
+                   "JOIN Movie ON Movie.idMovie = GenresByMovie.idMovie WHERE Movie.idMovie = %s"
             param = (mov_id,)
             self.cur.execute(code, param)
 
@@ -517,7 +530,6 @@ class MovieDatabase(Connector):
                            'genre': ", ".join(genre)}
             movies_data.append(movies_dict)
 
-        print(genre)
         return movies_data
 
     def get_movie_by_param(self, parameters, rand=False):
@@ -626,8 +638,7 @@ class MovieDatabase(Connector):
 
             # SQL code
             code = "SELECT idMovie FROM movie"
-            param = (None)
-            self.cur.execute(code, param)
+            self.cur.execute(code)
 
             # Saves all idMovie for movies
             for movie in self.cur:
@@ -649,7 +660,8 @@ class MovieDatabase(Connector):
             self.create_cursor()
 
             # SQL code
-            code = "SELECT movie.idMovie FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName IN (" + genres_str + ")"
+            code = "SELECT movie.idMovie FROM movie JOIN genresbymovie ON genresbymovie.idMovie = movie.idMovie " \
+                   "JOIN genre ON genresbymovie.idGenre = genre.idGenre WHERE genre.genreName IN (" + genres_str + ")"
             self.cur.execute(code, None)
 
             # Saves all idMovie for movies
@@ -672,7 +684,9 @@ class MovieDatabase(Connector):
             self.create_cursor()
 
             # SQL code
-            code = "SELECT movie.* FROM movie JOIN team ON team.idMovie = movie.idMovie JOIN writersanddirectors ON team.idWritersAndDirectors = writersanddirectors.idWritersAndDirectors WHERE writersanddirectors.name = %s"
+            code = "SELECT movie.* FROM movie JOIN team ON team.idMovie = movie.idMovie " \
+                   "JOIN writersanddirectors ON team.idWritersAndDirectors = writersanddirectors.idWritersAndDirectors " \
+                   "WHERE writersanddirectors.name = %s"
             param = (name,)
             self.cur.execute(code, param)
 
@@ -897,11 +911,10 @@ class MovieDatabase(Connector):
         # Return the call
         return call(parameters, rand)
 
-
     def search_movie_by_multiple_ids(self, id_list):
         """
         Function: Returns a movies list containing movie dicts. of the ids in the id_list
-        :param id: list containing movie ids
+        :param id_list: list containing movie ids
         :return: list[dict('idMovie': , 'title': , ...)]
         """
         
