@@ -314,17 +314,31 @@ class UserDataBase(Connector):
         :return: True/False if successful
         """
         try:
-            ver, user = self.get_user_by_username(username)
-            # Create cursor
-            self.create_cursor()
-            code = "INSERT INTO opinion(idUser, idMovie, opinion, ocena) VALUES (%s, %s, %s, %s)"
-            param = (user['idUser'], idMovie, opinion, rate)
-            # Execute the code
-            self.execute(code, param)
-            # Commit to database
-            self.commit()
-            # Close cursor
-            self.close_cursor()
+            opinion_check,rating_check = self.get_all_opinions_of_user(username)
+            if opinion_check == {} and rating_check == {}:
+                ver, user = self.get_user_by_username(username)
+                # Create cursor
+                self.create_cursor()
+                code = "INSERT INTO opinion(idUser, idMovie, opinion, ocena) VALUES (%s, %s, %s, %s)"
+                param = (user['idUser'], idMovie, opinion, rate)
+                # Execute the code
+                self.execute(code, param)
+                # Commit to database
+                self.commit()
+                # Close cursor
+                self.close_cursor()
+            else:
+                ver, user = self.get_user_by_username(username)
+                # Create cursor
+                self.create_cursor()
+                code = "UPDATE opinion SET opinion = %s, ocena = %s WHERE idUser = %s AND idMovie = %s"
+                param = (opinion, rate, user['idUser'], idMovie)
+                # Execute the code
+                self.execute(code, param)
+                # Commit to database
+                self.commit()
+                # Close cursor
+                self.close_cursor()                
         except:
             return False
         return True
