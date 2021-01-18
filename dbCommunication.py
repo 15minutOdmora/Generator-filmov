@@ -315,7 +315,7 @@ class UserDataBase(Connector):
         self.cur.execute(code, param)
 
         for opinion in self.cur:
-            data[opinion['opinion.idMovie']] = opinion['opinion.opinion']
+            data[opinion['idMovie']] = opinion['opinion']
                     
         self.close_cursor()
         return data
@@ -374,13 +374,7 @@ class MovieDatabase(Connector):
 
         return number_of_matches, movies_data
 
-    def search_by_integer(self, integer):
-        """ todo get keyword, search movies, int search by releaseYear(movies and directors)
-        Function: Returns movies where search word was an integer, first search by title and then by releaseYear
-        :param integer:
-        :return: sorted(dict(of movies)), sorted: movies with intiger in title first, then movies by release year
-        """
-        pass
+
 
     def random_new_movies(self):
         """
@@ -420,6 +414,18 @@ class MovieDatabase(Connector):
         :param id: idMovie
         :return: list[dict('idMovie': , 'title': , ...)]
         """
+        def search_all_genres_for_movie(mov_id):
+            genres_data = []
+            self.create_cursor()
+
+            
+            code = "SELECT genreName FROM Genre JOIN Genre ON Genre.idGenre = GenresByMovie.idGenre JOIN GenresByMovie ON Movie.idMovie = GenresByMovie.idMovie  WHERE Movie.title = %s"
+            param = (mov_id,)
+            self.cur.execute(code, param)
+            for genre in self.cur:
+                genres_data.append(genre['genreName'])
+            return genres_data
+            
         # List to save the movie data in
         movies_data = []
         # Create cursor
@@ -452,7 +458,7 @@ class MovieDatabase(Connector):
                            'numVotes': numVotes,
                            'img_url': img_url,
                            'description': additional_data['description']}
-                         # 'genre': [genre1, genre2, ...] todo
+                           'genre': search_all_genres_for_movie(idMovie)
             movies_data.append(movies_dict)
 
         return movies_data
