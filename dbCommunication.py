@@ -314,8 +314,10 @@ class UserDataBase(Connector):
         :return: True/False if successful
         """
         try:
-            opinion_check,rating_check = self.get_all_opinions_of_user(username)
-            if opinion_check == {} and rating_check == {}:
+            opinion_check, rating_check = self.get_all_opinions_of_user(username)
+            print(opinion_check, rating_check)
+            if idMovie not in rating_check.keys():
+                print("do sm pride")
                 ver, user = self.get_user_by_username(username)
                 # Create cursor
                 self.create_cursor()
@@ -469,7 +471,7 @@ class MovieDatabase(Connector):
             self.create_cursor()
     
             # SQL code
-            code = "SELECT genreName FROM Genre JOIN GenresByMovie ON Genre.idGenre = GenresByMovie.idGenre JOIN GenresByMovie ON Movie.idMovie = GenresByMovie.idMovie  WHERE Movie.title = %s"
+            code = "SELECT genreName FROM Genre JOIN GenresByMovie ON Genre.idGenre = GenresByMovie.idGenre JOIN Movie ON Movie.idMovie = GenresByMovie.idMovie WHERE Movie.idMovie = %s"
             param = (mov_id,)
             self.cur.execute(code, param)
 
@@ -499,7 +501,7 @@ class MovieDatabase(Connector):
             rating = movie['rating']
             numVotes = movie['numVotes']
 
-            # genre = search_all_genres_for_movie(idMovie)
+            genre = search_all_genres_for_movie(idMovie)
             img_url = get_google_image_link(title + " " + str(releaseYear))
             additional_data = get_movie_details(id)
 
@@ -510,11 +512,12 @@ class MovieDatabase(Connector):
                            'runtimeMinutes': runtimeMinutes,
                            'rating': rating,
                            'numVotes': numVotes,
-                           'img_url': img_url,
-                           'description': additional_data['description']}
-                          #  'genre': genre}
+                           'img_url':img_url,
+                           'description': additional_data['description'],
+                           'genre': ", ".join(genre)}
             movies_data.append(movies_dict)
 
+        print(genre)
         return movies_data
 
     def get_movie_by_param(self, parameters, rand=False):

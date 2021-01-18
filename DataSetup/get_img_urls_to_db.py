@@ -18,15 +18,16 @@ con.close_cursor()
 print("Done reading")
 
 i = 0
-for movie in data[::-1]:
+for movie in data[1245::-1]:
     title = movie['title']
     year = movie['year']
     string = title + " " + str(year)
     try:
         url = get_google_image_link(string)
+        print(url)
     except:
         i += 1
-        print(i, "Failed")
+        print(i, "Failed", title)
         continue
 
     con.create_cursor()

@@ -22,7 +22,7 @@
                     <button class="btn btn-primary" name="search_button" value="search" type="submit">Search</button>
                   </span>
                   <span class="input-group-btn" style="padding-left: 40px;">
-                    <strong>Don't know what to watch? Generate a random movie</strong>
+                    <strong>Don't know what to watch? Generate 3 random movies</strong>
                     <button class="btn btn-primary" name="search_button" value="generate" type="submit">Generate</button>
                   </span>
                 </div>
@@ -90,7 +90,7 @@
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input name="duration_to" type="number" class="form-control" placeholder="5020">
+            <input name="duration_to" type="number" class="form-control" placeholder="5221">
         </div>
         <div class="col-sm-4">
             <label style="font-size: 23px;">Directed by: </label>
@@ -107,7 +107,7 @@
         </div>
         <div class="col-sm-2">
             <label> to</label>
-            <input name="num_of_votes_to" type="number" class="form-control" placeholder="2307598">
+            <input name="num_of_votes_to" type="number" class="form-control" placeholder="2307599">
         </div>
     </div>
 
@@ -124,9 +124,8 @@
             <input name="rating_to" type="number" class="form-control" placeholder="10">
         </div>
     </div>
-
     <div class="row bg-light" style="padding-top: 60px;"></div>
-
+    {{param|safe}}
     <!-- movies gets passed in as a list containing movie data dicts -->
     <ul class="list-unstyled">
         {% for movie in movies %}

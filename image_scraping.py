@@ -12,7 +12,11 @@ def get_google_image_link(word):
     url = 'https://www.google.com/search?q=' + word + '&client=opera&hs=cTQ&source=lnms&tbm=isch&sa=X&ved=0ahUKEwig3LOx4PzKAhWGFywKHZyZAAgQ_AUIBygB&biw=1920&bih=982'
     page = requests.get(url).text
     soup = BeautifulSoup(page, 'html.parser')
-    return soup.find_all('img')[1].get('src')
+    try:
+        link = soup.find_all('img')[1].get('src')
+    except:
+        link = ''
+    return link
 
 
 def get_movie_details(movieId):

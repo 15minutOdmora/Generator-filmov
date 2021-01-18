@@ -66,10 +66,10 @@
                                               <div class="col-sm-1">
                                                 {% if 'opinion' in movie.keys() %}
                                                   <label for="grade1">Rate(1-10)</label>
-                                                  <input name="rate" id="grade1" type="number" width="5" min="1" max="10" value="{{ movie.opinion_rating }}">
+                                                  <input name="rate" id="grade1" type="number" width="5" min="1" step="1" max="10" value="{{ movie.opinion_rating }}">
                                                 {% else %}
                                                   <label for="grade2">Rate(1-10)</label>
-                                                  <input name="rate" id="grade2" type="number" width="5" min="1" max="10">
+                                                  <input name="rate" id="grade2" type="number" width="5" min="1" max="10" step="1">
                                                 {% endif %}
                                               </div>
                                           </div>
@@ -87,7 +87,7 @@
                             {% else %}
                                 <button type="submit" name="save_button" value="liked {{ movie.idMovie }}" class="btn btn-outline-danger">Like</button>
                             {% endif %}
-                            {% if movie.idMovie in session.user.watched.keys() %}
+                            {% if movie.idMovie in session.user.watched %}
                                 <button type="submit" name="save_button" value="unwatched {{ movie.idMovie }}" class="btn btn-outline-success active">Watched</button>
                             {% else %}
                                 <button type="submit" name="save_button" value="watched {{ movie.idMovie }}" class="btn btn-outline-success">Watched</button>
@@ -144,10 +144,10 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>To do</label>
+                                                <label>Genres:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>To even more do</p>
+                                                <p>{{ movie.genre }}</p>
                                             </div>
                                         </div>
                             </div>

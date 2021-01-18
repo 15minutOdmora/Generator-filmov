@@ -159,12 +159,13 @@ def movie(id):
 
     movie_data = mdb.search_movie_by_id(id)[0]
 
-    if session["logged_in"]:
+    if 'logged_in' in session:
         opinion, opinion_rating = udb.get_all_opinions_of_user(session['user']['username'])
         # Save opinion in movie_data
         if id in opinion.keys():
             movie_data['opinion'] = opinion[id]
-            movie_data['opinion_rating'] = opinion_rating[id]
+            movie_data['opinion_rating'] = int(opinion_rating[id])
+
     return render_template("movie_page.html", movie=movie_data)
 
 
@@ -191,9 +192,29 @@ def user_profile(username):
         return render_template("<h2>This user does not exist</h2>")
 
 
+def param_to_string(param):
+    """
+    Helper function for random_generator, creates a string from the param dict
+    :param param_dict: param_dict from random_generator
+    :return: string of params
+    """
+    string = "<p>Search results for these parameters: </p>"
+    if param == {}:
+        return "<p></p>"
+    for key, value in param.items():
+        if isinstance(value, dict):
+            string += "<p>  " + key + ": " + "from " + str(value['from']) + " to " + str(value["to"]) + "</p>"
+        else:
+            if not isinstance(value, list):
+                string += "<p>  " + key + ": " + " ".join(value) + "</p>"
+            else:
+                string += "<p>  " + key + ": " + str(value) + "</p>"
+    return string
+
+
 def param_cleaner(param_dict):
     """
-    Helper function for random_generator, cleans the fiven param_dict of 'empty' values
+    Helper function for random_generator, cleans the given param_dict of 'empty' values
     :param param_dict: param_dict from random_generator
     :return: param_dict_cleaned
     """
@@ -264,9 +285,9 @@ def random_generator():
             if "select_genre" in request.form.keys():
                 params_dict["genre"] = request.form.getlist('select_genre')
 
-            movies = mdb.get_movie_by_param(param_cleaner(params_dict))
-            print(param_cleaner(params_dict))
-            return render_template("random_generator.html", movies=movies)
+            param = param_cleaner(params_dict)
+            movies = mdb.get_movie_by_param(param)
+            return render_template("random_generator.html", movies=movies, param=param_to_string(param))
 
         # If Generate button was clicked
         if request.form.get("search_button", False) == 'generate':
@@ -282,10 +303,12 @@ def random_generator():
             if "select_genre" in request.form.keys():
                 params_dict["genre"] = request.form.getlist('select_genre')
 
-            movies = mdb.get_movie_by_param(param_cleaner(params_dict), rand=True)
-            return render_template("random_generator.html", movies=movies)
+            param = param_cleaner(params_dict)
+            print(param_to_string(param))
+            movies = mdb.get_movie_by_param(param, rand=True)
+            return render_template("random_generator.html", movies=movies, param=param_to_string(param))
 
-    return render_template("random_generator.html", movies=[])
+    return render_template("random_generator.html", movies=[], param="")
 
 
 @app.route("/", methods=["POST", "GET"])
