@@ -126,6 +126,9 @@
     </div>
     <div class="row bg-light" style="padding-top: 60px;"></div>
     {{param|safe}}
+    <div class="row" style="padding-top: 60px;">
+        <p>{{ search_results|safe }} results that fit the parameters</p>
+    </div>
     <!-- movies gets passed in as a list containing movie data dicts -->
     <ul class="list-unstyled">
         {% for movie in movies %}

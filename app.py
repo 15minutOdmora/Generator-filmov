@@ -158,18 +158,18 @@ def movie(id):
             ver = udb.save_opinion_of_movie(session['user']['username'], id, opinion, int(rate))
             print(ver)
 
-    # Have to update session otherwise liked/watched gets f****d
-    username = session['user']['username']
-    is_in_database, user_dict = udb.get_user_by_username(username)
-    email = user_dict['email']
-    phone = user_dict['phone']
-    liked = user_dict['liked']
-    watched = user_dict['watched']
-    session['user'] = {'username': username,
-                       'email': email,
-                       'phone': phone,
-                       'liked': liked,
-                       'watched': watched}
+        # Have to update session otherwise liked/watched gets f****d
+        username = session['user']['username']
+        is_in_database, user_dict = udb.get_user_by_username(username)
+        email = user_dict['email']
+        phone = user_dict['phone']
+        liked = user_dict['liked']
+        watched = user_dict['watched']
+        session['user'] = {'username': username,
+                           'email': email,
+                           'phone': phone,
+                           'liked': liked,
+                           'watched': watched}
 
     movie_data = mdb.search_movie_by_id(id)[0]
 
@@ -201,7 +201,11 @@ def user_profile(username):
                 searched_movie['opinion'] = opinions[key]
                 searched_movie['opinion_rating'] = ratings[key]
             watched_movies.append(searched_movie)
-        return render_template("user_profile.html", user_data=user_data, liked=liked_movies, watched=watched_movies, opinions=opinions)
+        return render_template("user_profile.html",
+                               user_data=user_data,
+                               liked=liked_movies,
+                               watched=watched_movies,
+                               opinions=opinions)
     else:
         return "<h2>This user does not exist</h2>"
 
@@ -301,7 +305,10 @@ def random_generator():
 
             param = param_cleaner(params_dict)
             movies = mdb.get_movie_by_param(param)
-            return render_template("random_generator.html", movies=movies, param=param_to_string(param))
+            search_results = str(len(movies))
+            return render_template("random_generator.html", movies=movies,
+                                   param=param_to_string(param),
+                                   search_results=search_results)
 
         # If Generate button was clicked
         if request.form.get("search_button", False) == 'generate':
@@ -320,9 +327,12 @@ def random_generator():
             param = param_cleaner(params_dict)
             print(param_to_string(param))
             movies = mdb.get_movie_by_param(param, rand=True)
-            return render_template("random_generator.html", movies=movies, param=param_to_string(param))
+            search_results = str(len(movies))
+            return render_template("random_generator.html", movies=movies,
+                                   param=param_to_string(param),
+                                   search_results=search_results)
 
-    return render_template("random_generator.html", movies=[], param="")
+    return render_template("random_generator.html", movies=[], param="", search_results="0")
 
 
 @app.route("/", methods=["POST", "GET"])
