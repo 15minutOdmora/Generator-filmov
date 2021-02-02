@@ -1,0 +1,207 @@
+tconst	titleType	primaryTitle	originalTitle	isAdult	startYear	endYear	runtimeMinutes	genres
+tt0000574	movie	The Story of the Kelly Gang	The Story of the Kelly Gang	0	1906	\N	70	Biography,Crime,Drama
+tt0001892	movie	Den sorte drøm	Den sorte drøm	0	1911	\N	53	Drama
+tt0002101	movie	Cleopatra	Cleopatra	0	1912	\N	100	Drama,History
+tt0002130	movie	Dante's Inferno	L'Inferno	0	1911	\N	71	Adventure,Drama,Fantasy
+tt0002199	movie	From the Manger to the Cross; or, Jesus of Nazareth	From the Manger to the Cross; or, Jesus of Nazareth	0	1912	\N	60	Biography,Drama
+tt0002281	movie	The Invaders	The Invaders	0	1912	\N	41	Western
+tt0002423	movie	Passion	Madame DuBarry	0	1919	\N	85	Biography,Drama,Romance
+tt0002445	movie	Quo Vadis?	Quo Vadis?	0	1913	\N	120	Drama,History
+tt0002452	movie	The Independence of Romania	Independenta Romaniei	0	1912	\N	120	History,War
+tt0002461	movie	The Life and Death of King Richard III	Richard III	0	1912	\N	55	Drama
+tt0002646	movie	Atlantis	Atlantis	0	1913	\N	121	Drama
+tt0002844	movie	Fantômas: In the Shadow of the Guillotine	Fantômas - À l'ombre de la guillotine	0	1913	\N	54	Crime,Drama
+tt0003014	movie	Ingeborg Holm	Ingeborg Holm	0	1913	\N	96	Drama
+tt0003037	movie	Fantomas: The Man in Black	Juve contre Fantômas	0	1913	\N	61	Crime,Drama
+tt0003102	movie	Love Everlasting	Ma l'amor mio non muore...	0	1914	\N	90	Drama
+tt0003131	movie	War Is Hell	Maudite soit la guerre	0	1914	\N	50	Drama,War
+tt0003165	movie	Fantômas: The Dead Man Who Killed	Le mort qui tue	0	1913	\N	90	Crime,Drama,Mystery
+tt0003167	movie	Home, Sweet Home	Home, Sweet Home	0	1914	\N	55	Drama
+tt0003419	movie	The Student of Prague	Der Student von Prag	0	1913	\N	85	Drama,Fantasy,Horror
+tt0003471	movie	Traffic in Souls	Traffic in Souls	0	1913	\N	88	Crime,Drama
+tt0003489	movie	The Last Days of Pompeii	Gli ultimi giorni di Pompei	0	1913	\N	88	Adventure,Drama
+tt0003637	movie	Assunta Spina	Assunta Spina	0	1915	\N	72	Drama
+tt0003643	movie	The Avenging Conscience: or 'Thou Shalt Not Kill'	The Avenging Conscience: or 'Thou Shalt Not Kill'	0	1914	\N	78	Crime,Drama,Horror
+tt0003657	movie	The Bargain	The Bargain	0	1914	\N	70	Western
+tt0003740	movie	Cabiria	Cabiria	0	1914	\N	148	Adventure,Drama,History
+tt0003772	movie	Cinderella	Cinderella	0	1914	\N	52	Drama,Fantasy
+tt0003883	movie	L'enfant de Paris	L'enfant de Paris	0	1913	\N	124	Crime,Drama
+tt0003930	movie	Fantomas: The Mysterious Finger Print	Fantômas contre Fantômas	0	1914	\N	59	Crime,Drama
+tt0003952	movie	Fantômas: The False Magistrate	Le faux magistrat	0	1914	\N	70	Crime,Drama
+tt0003973	movie	A Florida Enchantment	A Florida Enchantment	0	1914	\N	63	Comedy
+tt0004026	movie	The Golem	Der Golem	0	1915	\N	60	Horror
+tt0004066	movie	Sealed Orders	Det hemmelighedsfulde X	0	1914	\N	84	Drama,Mystery
+tt0004099	movie	The New Wizard of Oz	His Majesty, the Scarecrow of Oz	0	1914	\N	59	Adventure,Comedy,Family
+tt0004134	movie	Hypocrites	Hypocrites	0	1915	\N	54	Drama
+tt0004150	movie	In the Land of the Head Hunters	In the Land of the Head Hunters	0	1914	\N	65	Drama,History
+tt0004181	movie	Judith of Bethulia	Judith of Bethulia	0	1914	\N	61	Drama
+tt0004457	movie	The Patchwork Girl of Oz	The Patchwork Girl of Oz	0	1914	\N	81	Adventure,Comedy,Family
+tt0004465	movie	The Perils of Pauline	The Perils of Pauline	0	1914	\N	199	Action,Adventure,Drama
+tt0004635	movie	The Squaw Man	The Squaw Man	0	1914	\N	74	Action,Drama,Romance
+tt0004681	movie	Tess of the Storm Country	Tess of the Storm Country	0	1914	\N	80	Drama
+tt0004707	movie	Tillie's Punctured Romance	Tillie's Punctured Romance	0	1914	\N	82	Comedy
+tt0004712	movie	The Undesirable	A tolonc	0	1915	\N	67	Drama
+tt0004743	movie	Uncle Tom's Cabin	Uncle Tom's Cabin	0	1914	\N	54	Drama
+tt0004766	movie	The Virginian	The Virginian	0	1914	\N	55	Western
+tt0004825	movie	The Wishing Ring: An Idyll of Old England	The Wishing Ring: An Idyll of Old England	0	1914	\N	54	Comedy,Drama
+tt0004838	movie	The Wrath of the Gods	The Wrath of the Gods	0	1914	\N	56	Drama,Romance
+tt0004872	movie	Alias Jimmy Valentine	Alias Jimmy Valentine	0	1915	\N	65	Crime,Drama
+tt0004873	movie	Alice in Wonderland	Alice in Wonderland	0	1915	\N	52	Adventure,Family,Fantasy
+tt0004972	movie	The Birth of a Nation	The Birth of a Nation	0	1915	\N	195	Drama,History,War
+tt0005060	movie	Carmen	Carmen	0	1915	\N	59	Drama
+tt0005078	movie	The Cheat	The Cheat	0	1915	\N	59	Drama,Romance
+tt0005149	movie	The Coward	The Coward	0	1915	\N	77	Drama,History,War
+tt0005339	movie	A Fool There Was	A Fool There Was	0	1915	\N	67	Drama
+tt0005402	movie	The Golden Chance	The Golden Chance	0	1915	\N	74	Drama
+tt0005529	movie	Blind Justice	Hævnens Nat	0	1916	\N	100	Crime,Drama,Horror
+tt0005557	movie	The Italian	The Italian	0	1915	\N	72	Drama
+tt0005680	movie	Marvelous Maciste	Maciste	0	1915	\N	67	Adventure
+tt0005719	movie	Martyrs of the Alamo	Martyrs of the Alamo	0	1915	\N	71	Drama,History,War
+tt0005809	movie	The Governor	The Nigger	0	1915	\N	50	Drama
+tt0005916	movie	After Death	Posle smerti	0	1915	\N	46	Drama
+tt0005951	movie	Satan's Rhapsody	Rapsodia satanica	0	1917	\N	55	Drama,Fantasy,Horror
+tt0005960	movie	The Regeneration	The Regeneration	0	1915	\N	72	Biography,Crime,Drama
+tt0006206	movie	Les vampires	Les vampires	0	1915	\N	421	Action,Adventure,Crime
+tt0006327	movie	Young Romance	Young Romance	0	1915	\N	59	Comedy
+tt0006333	movie	20,000 Leagues Under the Sea	20,000 Leagues Under the Sea	0	1916	\N	105	Action,Adventure,Sci-Fi
+tt0006405	movie	Kitchener's Great Army in the Battle of the Somme	The Battle of the Somme	0	1916	\N	74	Documentary,War
+tt0006509	movie	The Children in the House	The Children in the House	0	1916	\N	50	Drama
+tt0006517	movie	Civilization	Civilization	0	1915	\N	85	Drama
+tt0006589	movie	The Devil's Needle	The Devil's Needle	0	1916	\N	59	Drama
+tt0006617	movie	Dödskyssen	Dödskyssen	0	1916	\N	60	Comedy,Crime,Drama
+tt0006688	movie	Flirting with Fate	Flirting with Fate	0	1916	\N	57	Adventure,Comedy
+tt0006731	movie	Going Straight	Going Straight	0	1916	\N	60	Crime,Drama
+tt0006736	movie	The Good Bad-Man	The Good Bad-Man	0	1916	\N	50	Romance,Western
+tt0006745	movie	Gretchen the Greenhorn	Gretchen the Greenhorn	0	1916	\N	58	Crime,Drama,Romance
+tt0006753	movie	The Half-Breed	The Half-Breed	0	1916	\N	73	Western
+tt0006780	movie	Hell's Hinges	Hell's Hinges	0	1916	\N	64	Romance,Western
+tt0006809	movie	His Picture in the Papers	His Picture in the Papers	0	1916	\N	62	Comedy
+tt0006826	movie	Hoodoo Ann	Hoodoo Ann	0	1916	\N	65	Comedy,Drama,Romance
+tt0006864	movie	Intolerance: Love's Struggle Throughout the Ages	Intolerance: Love's Struggle Throughout the Ages	0	1916	\N	163	Drama,History
+tt0006886	movie	Judex	Judex	0	1916	\N	300	Adventure,Crime
+tt0007047	movie	The Matrimaniac	The Matrimaniac	0	1916	\N	46	Comedy,Romance
+tt0007183	movie	The Queen of Spades	Pikovaya dama	0	1916	\N	63	Drama,Fantasy,Horror
+tt0007257	movie	Reggie Mixes In	Reggie Mixes In	0	1916	\N	50	Action,Comedy,Drama
+tt0007260	movie	The Return of Draw Egan	The Return of Draw Egan	0	1916	\N	50	Action,Adventure,Romance
+tt0007309	movie	Shoe Palace Pinkus	Schuhpalast Pinkus	0	1916	\N	45	Comedy
+tt0007338	movie	Sherlock Holmes	Sherlock Holmes	0	1916	\N	116	Mystery
+tt0007340	movie	Shoes	Shoes	0	1916	\N	60	Drama
+tt0007361	movie	Snow White	Snow White	0	1916	\N	63	Fantasy,Romance
+tt0007367	movie	The Social Secretary	The Social Secretary	0	1916	\N	52	Comedy,Drama
+tt0007522	movie	Vingarne	Vingarne	0	1916	\N	69	Drama
+tt0007558	movie	Where Are My Children?	Where Are My Children?	0	1916	\N	62	Drama
+tt0007610	movie	'49-'17	'49-'17	0	1917	\N	61	Drama,Western
+tt0007755	movie	Bucking Broadway	Bucking Broadway	0	1917	\N	53	Western
+tt0007801	movie	Cleopatra	Cleopatra	0	1917	\N	125	Biography,Drama,History
+tt0007983	movie	Furcht	Furcht	0	1917	\N	72	Horror
+tt0008011	movie	A Girl's Folly	A Girl's Folly	0	1917	\N	65	Comedy
+tt0008100	movie	A Trip to Mars	Himmelskibet	0	1918	\N	97	Adventure,Fantasy,Sci-Fi
+tt0008150	movie	Joan the Woman	Joan the Woman	0	1916	\N	138	Adventure,Drama,History
+tt0008188	movie	The Little American	The Little American	0	1917	\N	80	Drama,Romance,War
+tt0008196	movie	The Little Princess	The Little Princess	0	1917	\N	62	Drama
+tt0008279	movie	The Torture of Silence	Mater dolorosa	0	1917	\N	80	Drama
+tt0008309	movie	A Modern Musketeer	A Modern Musketeer	0	1917	\N	68	Adventure,Comedy,Western
+tt0008395	movie	Father Sergius	Otets Sergiy	0	1918	\N	112	Biography,Drama,History
+tt0008443	movie	The Poor Little Rich Girl	The Poor Little Rich Girl	0	1917	\N	65	Comedy,Drama,Family
+tt0008489	movie	Raffles, the Amateur Cracksman	Raffles, the Amateur Cracksman	0	1917	\N	70	Adventure,Crime,Romance
+tt0008499	movie	Rebecca of Sunnybrook Farm	Rebecca of Sunnybrook Farm	0	1917	\N	78	Comedy,Drama
+tt0008519	movie	A Romance of the Redwoods	A Romance of the Redwoods	0	1917	\N	91	Adventure,Comedy,Drama
+tt0008536	movie	Satan Triumphant	Satana likuyushchiy	0	1917	\N	87	Drama
+tt0008634	movie	Straight Shooting	Straight Shooting	0	1917	\N	57	Western
+tt0008652	movie	A Tale of Two Cities	A Tale of Two Cities	0	1917	\N	70	Drama,History,Romance
+tt0008663	movie	A Man There Was	Terje Vigen	0	1917	\N	65	Drama,War
+tt0008672	movie	Thomas Graals bästa film	Thomas Graals bästa film	0	1917	\N	52	Comedy
+tt0008679	movie	Tillie Wakes Up	Tillie Wakes Up	0	1917	\N	48	Comedy
+tt0008687	movie	Tom Sawyer	Tom Sawyer	0	1917	\N	59	Adventure,Comedy,Drama
+tt0008710	movie	Girl from Stormy Croft	Tösen från Stormyrtorpet	0	1917	\N	87	Drama
+tt0008775	movie	Wild and Woolly	Wild and Woolly	0	1917	\N	72	Comedy,Romance,Western
+tt0008827	movie	Amarilly of Clothes-Line Alley	Amarilly of Clothes-Line Alley	0	1918	\N	67	Comedy,Romance
+tt0008843	movie	Man of Gold	Az aranyember	0	1919	\N	83	Drama
+tt0008854	movie	The Eyes of the Mummy	Die Augen der Mumie Ma	0	1918	\N	63	Drama,Horror
+tt0008879	movie	The Outlaw and His Wife	Berg-Ejvind och hans hustru	0	1918	\N	136	Drama
+tt0008891	movie	The Blue Bird	The Blue Bird	0	1918	\N	75	Family,Fantasy
+tt0008930	movie	Broadway Love	Broadway Love	0	1918	\N	60	Romance
+tt0008950	movie	Carmen	Carmen	0	1918	\N	70	Drama
+tt0009014	movie	The Tenth Symphony	La dixième symphonie	0	1918	\N	94	Drama
+tt0009062	movie	The Merry Jail	Das fidele Gefängnis	0	1917	\N	48	Comedy
+tt0009086	movie	The Forbidden City	The Forbidden City	0	1918	\N	62	Drama,Romance
+tt0009150	movie	Hearts of the World	Hearts of the World	0	1918	\N	117	Drama,War
+tt0009153	movie	Hell Bent	Hell Bent	0	1918	\N	50	Western
+tt0009241	movie	Johanna Enlists	Johanna Enlists	0	1918	\N	72	Comedy,Romance
+tt0009326	movie	M'Liss	M'Liss	0	1918	\N	73	Comedy,Drama
+tt0009356	movie	The Married Virgin	The Married Virgin	0	1918	\N	71	Drama
+tt0009369	movie	Mickey	Mickey	0	1918	\N	93	Comedy,Drama
+tt0009440	movie	Old Wives for New	Old Wives for New	0	1918	\N	60	Drama
+tt0009475	movie	A Pair of Silk Stockings	A Pair of Silk Stockings	0	1918	\N	60	Comedy,Romance
+tt0009559	movie	A Romance of Happy Valley	A Romance of Happy Valley	0	1919	\N	76	Drama,Romance
+tt0009608	movie	Shifting Sands	Shifting Sands	0	1918	\N	60	Drama
+tt0009652	movie	Stella Maris	Stella Maris	0	1918	\N	84	Drama
+tt0009682	movie	Tarzan of the Apes	Tarzan of the Apes	0	1918	\N	73	Action,Adventure
+tt0009701	movie	Tih Minh	Tih Minh	0	1918	\N	418	Adventure,Mystery
+tt0009737	movie	The Unbeliever	The Unbeliever	0	1918	\N	80	Drama,War
+tt0009796	movie	The Whispering Chorus	The Whispering Chorus	0	1918	\N	86	Drama
+tt0009878	movie	Different from the Others	Anders als die Andern	0	1919	\N	50	Crime,Drama,History
+tt0009892	movie	Auction of Souls	Ravished Armenia	0	1919	\N	80	Drama,History,Romance
+tt0009893	movie	The Oyster Princess	Die Austernprinzessin	0	1919	\N	60	Comedy
+tt0009894	movie	The Grey Automobile	El automóvil gris	0	1919	\N	223	Action,Crime
+tt0009900	movie	Back to God's Country	Back to God's Country	0	1919	\N	73	Adventure,Romance,Western
+tt0009915	movie	Behind the Door	Behind the Door	0	1919	\N	70	Drama,Thriller,War
+tt0009937	movie	Blind Husbands	Blind Husbands	0	1919	\N	99	Drama,Romance
+tt0009968	movie	Broken Blossoms	Broken Blossoms or The Yellow Man and the Girl	0	1919	\N	90	Drama,Romance
+tt0009976	movie	The Busher	The Busher	0	1919	\N	63	Drama,Sport
+tt0010040	movie	Daddy-Long-Legs	Daddy-Long-Legs	0	1919	\N	85	Comedy,Drama
+tt0010060	movie	The Delicious Little Devil	The Delicious Little Devil	0	1919	\N	63	Comedy,Drama
+tt0010071	movie	Don't Change Your Husband	Don't Change Your Husband	0	1919	\N	71	Comedy
+tt0010103	movie	Eyes of Youth	Eyes of Youth	0	1919	\N	78	Drama
+tt0010108	movie	The Fall of Babylon	The Fall of Babylon	0	1919	\N	82	Drama
+tt0010137	movie	For Better, for Worse	For Better, for Worse	0	1919	\N	70	Drama
+tt0010162	movie	Getting Mary Married	Getting Mary Married	0	1919	\N	65	Comedy
+tt0010193	movie	The Greatest Question	The Greatest Question	0	1919	\N	80	Drama
+tt0010195	movie	The Grim Game	The Grim Game	0	1919	\N	71	Adventure,Drama
+tt0010208	movie	Harakiri	Harakiri	0	1919	\N	80	Drama
+tt0010219	movie	Hawthorne of the U.S.A.	Hawthorne of the U.S.A.	0	1919	\N	57	Adventure,Comedy,Romance
+tt0010227	movie	Heart o' the Hills	Heart o' the Hills	0	1919	\N	87	Drama,Romance
+tt0010247	movie	Sir Arne's Treasure	Herr Arnes pengar	0	1919	\N	122	Drama,History
+tt0010267	movie	The Hoodlum	The Hoodlum	0	1919	\N	78	Comedy
+tt0010281	movie	I Don't Want to Be a Man	Ich möchte kein Mann sein	0	1918	\N	45	Comedy,Romance
+tt0010307	movie	J'accuse!	J'accuse	0	1919	\N	166	Drama,Horror,War
+tt0010323	movie	The Cabinet of Dr. Caligari	Das Cabinet des Dr. Caligari	0	1920	\N	76	Fantasy,Horror,Mystery
+tt0010418	movie	Male and Female	Male and Female	0	1919	\N	116	Adventure,Drama
+tt0010446	movie	The Master Mystery	The Master Mystery	0	1918	\N	\N	Action,Adventure,Mystery
+tt0010456	movie	Meyer from Berlin	Meyer aus Berlin	0	1919	\N	58	Comedy
+tt0010466	movie	The Miracle Man	The Miracle Man	0	1919	\N	80	Drama
+tt0010484	movie	The Mother and the Law	The Mother and the Law	0	1919	\N	95	Drama
+tt0010533	movie	Opium	Opium	0	1919	\N	112	Drama
+tt0010559	movie	Die Pest in Florenz	Die Pest in Florenz	0	1919	\N	92	Drama,History,Horror
+tt0010598	movie	The President	Præsidenten	0	1919	\N	75	Drama
+tt0010600	movie	The Doll	Die Puppe	0	1919	\N	66	Comedy,Fantasy
+tt0010635	movie	The Roaring Road	The Roaring Road	0	1919	\N	58	Comedy,Drama,Sport
+tt0010662	movie	Scarlet Days	Scarlet Days	0	1919	\N	77	Adventure,Romance,Western
+tt0010680	movie	The Sentimental Bloke	The Sentimental Bloke	0	1919	\N	106	Drama,Romance
+tt0010726	movie	The Spiders - Episode 1: The Golden Sea	Die Spinnen, 1. Teil - Der Goldene See	0	1919	\N	81	Adventure,Western
+tt0010755	movie	Sången om den eldröda blomman	Sången om den eldröda blomman	0	1919	\N	145	Drama,Romance
+tt0010806	movie	True Heart Susie	True Heart Susie	0	1919	\N	87	Comedy,Drama,Romance
+tt0010821	movie	Eerie Tales	Unheimliche Geschichten	0	1919	\N	112	Fantasy,Horror,Mystery
+tt0010844	movie	Victory	Victory	0	1919	\N	62	Drama,Romance
+tt0010853	movie	Wagon Tracks	Wagon Tracks	0	1919	\N	64	Western
+tt0010879	movie	When the Clouds Roll by	When the Clouds Roll by	0	1919	\N	85	Action,Comedy,Romance
+tt0010890	movie	The Wicked Darling	The Wicked Darling	0	1919	\N	59	Crime,Drama
+tt0010925	movie	Yankee Doodle in Berlin	Yankee Doodle in Berlin	0	1919	\N	58	Comedy
+tt0010953	movie	Power	Algol - Tragödie der Macht	0	1920	\N	99	Fantasy,Sci-Fi
+tt0010962	movie	Deception	Anna Boleyn	0	1920	\N	100	Biography,Drama,Romance
+tt0010964	movie	April Folly	April Folly	0	1920	\N	50	Crime,Drama
+tt0010969	movie	Missing Husbands	L'Atlantide	0	1921	\N	172	Adventure,Fantasy,Mystery
+tt0011000	movie	Leaves From Satan's Book	Blade af Satans bog	0	1920	\N	167	Drama
+tt0011128	movie	Down on the Farm	Down on the Farm	0	1920	\N	50	Comedy
+tt0011130	movie	Dr. Jekyll and Mr. Hyde	Dr. Jekyll and Mr. Hyde	0	1920	\N	69	Drama,Horror,Sci-Fi
+tt0011157	movie	Erotikon	Erotikon	0	1920	\N	106	Comedy,Romance
+tt0011173	movie	Fante-Anne	Fante-Anne	0	1920	\N	93	Crime,Drama,Romance
+tt0011193	movie	The Flapper	The Flapper	0	1920	\N	88	Comedy
+tt0011217	movie	Journey into the Night	Der Gang in die Nacht	0	1921	\N	81	Drama
+tt0011221	movie	Genuine: The Tragedy of a Vampire	Genuine	0	1920	\N	88	Horror
+tt0011237	movie	The Golem	Der Golem, wie er in die Welt kam	0	1920	\N	76	Fantasy,Horror
+tt0011267	movie	Headin' Home	Headin' Home	0	1920	\N	71	Biography,Comedy,Drama
+tt0011294	movie	The Swallow and the Titmouse	L'Hirondelle et la Mésange	0	1924	\N	80	Drama
+tt0011302	movie	L'homme du large	L'homme du large	0	1920	\N	86	Drama
+tt0011317	movie	Humoresque	Humoresque	0	1920	\N	60	Drama
+tt0011344	movie	The Jack-Knife Man	The Jack-Knife Man	0	1920	\N	60	Drama
